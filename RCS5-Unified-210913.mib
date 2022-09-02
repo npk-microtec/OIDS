@@ -1,0 +1,1466 @@
+
+Triada-Unified DEFINITIONS ::= BEGIN
+
+IMPORTS
+	NOTIFICATION-TYPE, OBJECT-TYPE, MODULE-IDENTITY, 
+	enterprises, TimeTicks, Integer32
+		FROM SNMPv2-SMI
+	NOTIFICATION-GROUP
+		FROM SNMPv2-CONF;
+
+modUnified MODULE-IDENTITY
+	LAST-UPDATED "202109130000Z"
+	ORGANIZATION 
+		"OOO NPP Triada TV"
+	CONTACT-INFO 
+		""
+	DESCRIPTION 
+		"Triada-TV Transmitter Unified MIB (Read Only)
+		
+		MIB SMIv2 Created by WAJIM"
+::= { entNPP-TriadaTV 20001 }
+
+entNPP-TriadaTV      OBJECT IDENTIFIER ::= { enterprises 31339 }
+devSystem            OBJECT IDENTIFIER ::= { modUnified 1 }
+sys-Display          OBJECT IDENTIFIER ::= { devSystem 1 }
+sysDisp-Main         OBJECT IDENTIFIER ::= { sys-Display 1 }
+sysDisp-Powers       OBJECT IDENTIFIER ::= { sys-Display 2 }
+sysDisp-Devices      OBJECT IDENTIFIER ::= { sys-Display 3 }
+sysDisp-RCS          OBJECT IDENTIFIER ::= { sys-Display 4 }
+sysDisp-Pars         OBJECT IDENTIFIER ::= { sys-Display 5 }
+sysDisp-DevicesType  OBJECT IDENTIFIER ::= { sys-Display 6 }
+sys-Notifications    OBJECT IDENTIFIER ::= { devSystem 2 }
+sysNot-Pars          OBJECT IDENTIFIER ::= { sys-Notifications 2 }
+sysNot-List          OBJECT IDENTIFIER ::= { sys-Notifications 3 }
+sys-TransmitterControls  OBJECT IDENTIFIER ::= { devSystem 3 }
+sys-SpareSwitchSystemControls  OBJECT IDENTIFIER ::= { devSystem 4 }
+sysCtlSss-Main       OBJECT IDENTIFIER ::= { sys-SpareSwitchSystemControls 1 }
+sysCtlSss-AutoSwitching  OBJECT IDENTIFIER ::= { sys-SpareSwitchSystemControls 2 }
+
+sysDispMain-GlobalOID  OBJECT-TYPE
+	SYNTAX     OBJECT IDENTIFIER
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global OID Root"
+	::= { sysDisp-Main 1 }
+
+sysDispMain-ModelOID  OBJECT-TYPE
+	SYNTAX     OBJECT IDENTIFIER
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Model OID Root"
+	::= { sysDisp-Main 2 }
+
+sysDispMain-ModelCode  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Model Code"
+	::= { sysDisp-Main 3 }
+
+sysDispMain-ModelShort  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Short Model (UTF8)"
+	::= { sysDisp-Main 4 }
+
+sysDispMain-ModelFull  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Full Model (UTF8)"
+	::= { sysDisp-Main 5 }
+
+sysDispMain-Name  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Name/Location (UTF8) - Reserved"
+	::= { sysDisp-Main 6 }
+
+sysDispMain-SerialNumber  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Serial Number (0 - Unused)"
+	::= { sysDisp-Main 7 }
+
+sysDispMain-Channel  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter's Channel (0 - Unused)"
+	::= { sysDisp-Main 8 }
+
+sysDispMain-TypicalPowerOut  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter's Typical PowerOut (0 - Unused)    Unit: 1 W"
+	::= { sysDisp-Main 9 }
+
+sysDispMain-DevicesCount  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total Physical Devices Count"
+	::= { sysDisp-Main 10 }
+
+sysDispMain-DevicesConnected  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Connected Physical Devices Count"
+	::= { sysDisp-Main 11 }
+
+sysDispMain-StatusWarning  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		no (0),
+		yes (1)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global Warning Status: 0-No, 1-Yes"
+	::= { sysDisp-Main 12 }
+
+sysDispMain-StatusFailure  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		no (0),
+		yes (1)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global Failure Status: 0-No, 1-Yes"
+	::= { sysDisp-Main 13 }
+
+sysDispMain-DeviceID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"SNMP Device ID1"
+	::= { sysDisp-Main 14 }
+
+sysDispMain-DeviceTypeID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"SNMP Device Type ID"
+	::= { sysDisp-Main 15 }
+
+sysDispMain-OptDemodulatorOID  OBJECT-TYPE
+	SYNTAX     OBJECT IDENTIFIER
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Optional Demodulator's OID Root (Null - Unused)"
+	::= { sysDisp-Main 16 }
+
+sysDispMain-DevicesIgnored  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Ignored Physical Devices Count"
+	::= { sysDisp-Main 17 }
+
+sysDispMain-TrapStatusList  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global Trap Used+Available Status List
+		
+		Separators: <LF> / <LF><LF>
+		Format: Id1<LF>Value1<LF><LF>Id2<LF>Value2 ..."
+	::= { sysDisp-Main 18 }
+
+sysDispMain-TrapValueList  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global Trap Used+Available Value List
+		
+		Separators: <LF> / <LF><LF>
+		Format: Id1<LF>Value1<LF><LF>Id2<LF>Value2 ..."
+	::= { sysDisp-Main 19 }
+
+sysDispMain-TrapStatusValueList  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global Trap Used+Available Status+Value List
+		
+		Separators: <LF> / <LF><LF>
+		Format: Id1<LF>Value1<LF><LF>Id2<LF>Value2 ..."
+	::= { sysDisp-Main 20 }
+
+sysDispMain-TrapUsedIdList  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Global Trap Used Status+Value ID List
+		
+		Separator: Space
+		Format: Id1 Id2 ..."
+	::= { sysDisp-Main 21 }
+
+sysDispMain-PowerOut  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut
+		Unit: from PowerOut-Units and PowerOut-Divider"
+	::= { sysDisp-Powers 1 }
+
+sysDispMain-PowerOut-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut Divider: 1, 10, 100"
+	::= { sysDisp-Powers 2 }
+
+sysDispMain-PowerOut-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Watts (1),
+		units-kWatts (2),
+		units-dB (3),
+		units-Percents (4)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut Units: -1-Unused, 0-N/A, 1-W, 2-kW, 3-dB, 4-%"
+	::= { sysDisp-Powers 3 }
+
+sysDispMain-PowerRef  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerRef
+		Unit: from PowerRef-Units and PowerRef-Divider"
+	::= { sysDisp-Powers 4 }
+
+sysDispMain-PowerRef-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerRef Divider: 1, 10, 100"
+	::= { sysDisp-Powers 5 }
+
+sysDispMain-PowerRef-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Watts (1),
+		units-kWatts (2),
+		units-dB (3),
+		units-Percents (4)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerRef Units: -1-Unused, 0-N/A, 1-W, 2-kW, 3-dB, 4-%"
+	::= { sysDisp-Powers 6 }
+
+sysDispMain-PowerBallast  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerBallast
+		Unit: from PowerBallast-Units and PowerBallast-Divider"
+	::= { sysDisp-Powers 7 }
+
+sysDispMain-PowerBallast-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerBallast Divider: 1, 10, 100"
+	::= { sysDisp-Powers 8 }
+
+sysDispMain-PowerBallast-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Watts (1),
+		units-kWatts (2),
+		units-dB (3),
+		units-Percents (4)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut Units: -1-Unused, 0-N/A, 1-W, 2-kW, 3-dB, 4-%"
+	::= { sysDisp-Powers 9 }
+
+sysDispMain-PowerAudioOut  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - Audio PowerOut
+		Unit: from PowerAudioOut-Units and PowerAudioOut-Divider"
+	::= { sysDisp-Powers 10 }
+
+sysDispMain-PowerAudioOut-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - Audio PowerOut Divider: 1, 10, 100"
+	::= { sysDisp-Powers 11 }
+
+sysDispMain-PowerAudioOut-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Watts (1),
+		units-kWatts (2),
+		units-dB (3),
+		units-Percents (4)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - Audio PowerOut Units: -1-Unused, 0-N/A, 1-W, 2-kW, 3-dB, 4-%"
+	::= { sysDisp-Powers 12 }
+
+sysDispMain-PowerOut2  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut2
+		Unit: from PowerOut2-Units and PowerOut2-Divider"
+	::= { sysDisp-Powers 13 }
+
+sysDispMain-PowerOut2-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut2 Divider: 1, 10, 100"
+	::= { sysDisp-Powers 14 }
+
+sysDispMain-PowerOut2-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Watts (1),
+		units-kWatts (2),
+		units-dB (3),
+		units-Percents (4)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerOut2 Units: -1-Unused, 0-N/A, 1-W, 2-kW, 3-dB, 4-%"
+	::= { sysDisp-Powers 15 }
+
+sysDispMain-PowerRef2  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerRef2
+		Unit: from PowerRef2-Units and PowerRef2-Divider"
+	::= { sysDisp-Powers 16 }
+
+sysDispMain-PowerRef2-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerRef2 Divider: 1, 10, 100"
+	::= { sysDisp-Powers 17 }
+
+sysDispMain-PowerRef2-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Watts (1),
+		units-kWatts (2),
+		units-dB (3),
+		units-Percents (4)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - PowerRef2 Units: -1-Unused, 0-N/A, 1-W, 2-kW, 3-dB, 4-%"
+	::= { sysDisp-Powers 18 }
+
+sysDispMain-VSWR  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - VSWR
+		Unit: from VSWR-Units and VSWR-Divider"
+	::= { sysDisp-Powers 19 }
+
+sysDispMain-VSWR-Divider  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - VSWR Divider: 1, 10, 100"
+	::= { sysDisp-Powers 20 }
+
+sysDispMain-VSWR-Units  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (-1),
+		units-NotAvailable (0),
+		units-Ratio (1)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - VSWR Units: -1-Unused, 0-N/A, 1-Ratio"
+	::= { sysDisp-Powers 21 }
+
+sysDispDev-TypesCount  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Logical Devices Types Count"
+	::= { sysDisp-Devices 1 }
+
+sysDispDev-ControlsUnit  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 1 Logical Devices Count"
+	::= { sysDisp-Devices 2 }
+
+sysDispDev-Exciters  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 2 Logical Devices Count"
+	::= { sysDisp-Devices 3 }
+
+sysDispDev-Amplifiers  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 3 Logical Devices Count"
+	::= { sysDisp-Devices 4 }
+
+sysDispDev-Ballasts  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 4 Logical Devices Count"
+	::= { sysDisp-Devices 5 }
+
+sysDispDev-LiquidCooling  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 5 Logical Devices Count"
+	::= { sysDisp-Devices 6 }
+
+sysDispDev-Demodulators  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 6 Logical Devices Count"
+	::= { sysDisp-Devices 7 }
+
+sysDispDev-SpareSwitchModule  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 7 Logical Devices Count"
+	::= { sysDisp-Devices 8 }
+
+sysDispDev-ZxxDevice  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 8 Logical Devices Count"
+	::= { sysDisp-Devices 9 }
+
+sysDispRCS-ConfigRevision  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Base Config Signature"
+	::= { sysDisp-RCS 1 }
+
+sysDispRCS-SoftVersion  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Software Version"
+	::= { sysDisp-RCS 2 }
+
+sysDispRCS-SNMP-Version  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		v1 (1),
+		v2c (2),
+		v1v2c (3)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Valid SNMP Versions: 1-v1, 2-v2c, 3-v1/v2c"
+	::= { sysDisp-RCS 3 }
+
+sysDispRCS-SNMP-MaxSize  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Maximum I/O Packet Size   Unit: 1 Byte"
+	::= { sysDisp-RCS 4 }
+
+sysDispRCS-SNMP-MaxObjRate  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Maximum Incoming Objects per second (Deflood for Reads/Writes)"
+	::= { sysDisp-RCS 5 }
+
+sysDispRCS-SNMP-Codepage  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS SNMP Language Codepage"
+	::= { sysDisp-RCS 6 }
+
+sysDispRCS-UpTime  OBJECT-TYPE
+	SYNTAX     TimeTicks
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS UpTime"
+	::= { sysDisp-RCS 7 }
+
+sysDispRCS-MiniLog  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Internal Mini-Log (UTF8, Multiline)"
+	::= { sysDisp-RCS 8 }
+
+sysDispRCS-BusyCount  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Controls Busy Count: Positive - Ready, Negative - Busy"
+	::= { sysDisp-RCS 9 }
+
+sysDispRCS-MaxPostWrites  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Maximum Post Writes Count Per Device"
+	::= { sysDisp-RCS 10 }
+
+sysDispRCS-InformsQueueWait  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Non-acknowledged Informs Count In Buffer"
+	::= { sysDisp-RCS 11 }
+
+sysDispRCS-InformsQueueLost  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Lost Non-acknowledged Informs Count In Buffer (Underruns)"
+	::= { sysDisp-RCS 12 }
+
+sysDispRCS-InformsSeqNumber  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Last Inform's Sequence Number"
+	::= { sysDisp-RCS 13 }
+
+sysDispRCS-DateTime  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Current Date/Time on RCS-Server"
+	::= { sysDisp-RCS 14 }
+
+sysDispRCS-SupportModels  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Supported Models List by RCS (Separator - Space)"
+	::= { sysDisp-RCS 15 }
+
+sysDispRCS-Functions  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"RCS Active Functions (Bit-mapped):
+		
+		Bit 0 - Antenna Protection
+		Bit 1 - Transmitter Services: Full Support
+		Bit 2 - Transmitter Services: Status + Messages  (Branch srvDisp-Main)
+		Bit 3 - One or more amplifiers has controls (Check ampXAux-Features)
+		Bit 4 - Scheduler"
+	::= { sysDisp-RCS 16 }
+
+sysDispRCS-SupportOptions  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Supported Options for Current Model (Bit-mapped)"
+	::= { sysDisp-RCS 17 }
+
+sysDispRCS-ModelsTitles  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Titles for Supported Models List by RCS (Separator - CrLf) (UTF8)"
+	::= { sysDisp-RCS 18 }
+
+sysDispRCS-ModelsInfos  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Infos for Supported Models List by RCS (Separator - CrLf) (UTF8)"
+	::= { sysDisp-RCS 19 }
+
+sysDispRCS-TcpTunnelsRange  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"TCP-tunnels local ports range"
+	::= { sysDisp-RCS 20 }
+
+sysDispRCS-TcpTunnelsBase  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"TCP-tunnels base local port (0-Unused/Disabled)"
+	::= { sysDisp-RCS 21 }
+
+sysDispRCS-TcpTunnelsAlive  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"TCP-tunnels alive status (bit-mapped): 0x1 - Tunnel #1, 0x2 - Tunnel #2."
+	::= { sysDisp-RCS 22 }
+
+sysDispRCS-RedundancyStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Redundancy Status:
+		-3 - Channel #3 - Not Ready
+		-2 - Channel #2 - Not Ready
+		-1 - Channel #1 - Not Ready
+		0 - Disabled
+		1 - Channel #1 - Ready
+		2 - Channel #2 - Ready
+		3 - Channel #3 - Ready"
+	::= { sysDisp-RCS 23 }
+
+sysDispRCS-DeviceTypesList  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Device Types List (Separator - CrLf) (UTF8)"
+	::= { sysDisp-RCS 24 }
+
+sysDispRCS-ExclusiveStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Device Exclusive Status (Without SSM):
+		0 - OK
+		1 - Warning
+		2 - Failure
+		3 - Failure + Warning"
+	::= { sysDisp-RCS 25 }
+
+sysDispPars-AvrTemp  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Average Blocks Temperature  Unit: 1.0 `C (-1 - N/A)"
+	::= { sysDisp-Pars 1 }
+
+sysDispPars-AvrTempStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Average Blocks Temperature Status:
+		-1 - N/A
+		0 - Unused
+		1 - Normal
+		2 - Warning
+		3 - Failure"
+	::= { sysDisp-Pars 2 }
+
+sysDispPars-MaxTemp  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Maximum Blocks Temperature  Unit: 1.0 `C (-1 - N/A)"
+	::= { sysDisp-Pars 3 }
+
+sysDispPars-MaxTempStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Maximum Blocks Temperature Status:
+		-1 - N/A
+		0 - Unused
+		1 - Normal
+		2 - Warning
+		3 - Failure"
+	::= { sysDisp-Pars 4 }
+
+sysDispPars-CursUnits  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		units-Unused (0),
+		units-Amperes (1),
+		units-Percent (2)
+	}
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Amplifiers Currents Units: 0-Unused, 1-Amperes, 2-Percent"
+	::= { sysDisp-Pars 5 }
+
+sysDispDevType-TypesCount  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Logical Devices Types Count"
+	::= { sysDisp-DevicesType 1 }
+
+sysDispDevType-ControlsUnit  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 1 Logical Devices Type"
+	::= { sysDisp-DevicesType 2 }
+
+sysDispDevType-Exciters  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 2 Logical Devices Type"
+	::= { sysDisp-DevicesType 3 }
+
+sysDispDevType-Amplifiers  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 3 Logical Devices Type"
+	::= { sysDisp-DevicesType 4 }
+
+sysDispDevType-Ballasts  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 4 Logical Devices Type"
+	::= { sysDisp-DevicesType 5 }
+
+sysDispDevType-LiquidCooling  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 5 Logical Devices Type"
+	::= { sysDisp-DevicesType 6 }
+
+sysDispDevType-Demodulators  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 6 Logical Devices Type"
+	::= { sysDisp-DevicesType 7 }
+
+sysDispDevType-SpareSwitchModule  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 7 Logical Devices Type"
+	::= { sysDisp-DevicesType 8 }
+
+sysDispDevType-ZxxDevice  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Type 8 Logical Devices Type"
+	::= { sysDisp-DevicesType 9 }
+
+sysNotP-RCSVersion  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"RCS SNMP Agent Version + Signature
+		
+		TriView Format: TV1.2345
+		
+		OPTIONAL"
+	::= { sysNot-Pars 1 }
+
+sysNotP-DeviceID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Device Unique ID (0 - Skip Notification)"
+	::= { sysNot-Pars 2 }
+
+sysNotP-ModelOID  OBJECT-TYPE
+	SYNTAX     OBJECT IDENTIFIER
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"Device Model OID Root
+		
+		OBSOLETE"
+	::= { sysNot-Pars 3 }
+
+sysNotP-ModelCode  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"Device Code
+		
+		OBSOLETE"
+	::= { sysNot-Pars 4 }
+
+sysNotP-ModelFull  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"Device Full Model (UTF-8)
+		
+		OBSOLETE"
+	::= { sysNot-Pars 5 }
+
+sysNotP-Name  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Device Host Name (Blank - Unused)
+		
+		For Zabbix ONLY
+		
+		OPTIONAL"
+	::= { sysNot-Pars 6 }
+
+sysNotP-Service  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Service Flags
+		
+		For Zabbix ONLY
+		
+		OPTIONAL"
+	::= { sysNot-Pars 7 }
+
+sysNotP-SysDesc  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"System Description (UTF-8)
+		
+		OBSOLETE"
+	::= { sysNot-Pars 8 }
+
+sysNotP-SequenceNumber  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Inform's Sequence Number in FIFO"
+	::= { sysNot-Pars 9 }
+
+sysNotP-DateTime  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Trap/Inform's Date/Time (YYYY-MM-DD HH:MM:SS)"
+	::= { sysNot-Pars 10 }
+
+sysNotP-StatusWarning  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Device Warning Status: 0-No, 1-Yes"
+	::= { sysNot-Pars 11 }
+
+sysNotP-StatusFailure  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Device Failure Status: 0-No, 1-Yes"
+	::= { sysNot-Pars 12 }
+
+sysNotP-MessageCode  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"Message Code
+		
+		OBSOLETE"
+	::= { sysNot-Pars 13 }
+
+sysNotP-MessageText  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Message Text (UTF-8)
+		
+		Max Recommended Size: 200 chars"
+	::= { sysNot-Pars 14 }
+
+sysNotP-EventType  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"Event Type: 0-Breakup, 1-Occurrence
+		
+		OBSOLETE"
+	::= { sysNot-Pars 15 }
+
+sysNotP-ChangedOID  OBJECT-TYPE
+	SYNTAX     OBJECT IDENTIFIER
+	MAX-ACCESS accessible-for-notify
+	STATUS     obsolete
+	DESCRIPTION 
+		"Changed parameter's OID
+		
+		OBSOLETE"
+	::= { sysNot-Pars 16 }
+
+sysNotP-ParID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Parameter ID: 0 ... 999"
+	::= { sysNot-Pars 17 }
+
+sysNotP-ParValue  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Parameter Value: -2147483648 ... 2147483647"
+	::= { sysNot-Pars 18 }
+
+sysNotP-ParStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Parameter Status: 0-NoStatus, 1-OK, 2-Warning, 3-Failure, 4-HideValue (Unused)
+		
+		Ignored on Zabbix
+		
+		OPTIONAL"
+	::= { sysNot-Pars 19 }
+
+sysNotP-ParDBSave  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Parameter DB Save: 0-No, 1-Yes
+		
+		Ignored on Zabbix
+		
+		OPTIONAL"
+	::= { sysNot-Pars 20 }
+
+sysNotP-ParSequenceNumber  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Parameter DB Saved Sequence Number
+		
+		Ignored on Zabbix
+		
+		OPTIONAL"
+	::= { sysNot-Pars 21 }
+
+sysNotP-ParDeviceType  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Device Type ID"
+	::= { sysNot-Pars 22 }
+
+sysNotP-GlobalStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Global Status: 0-OK, 1-Warning, 2-Failure"
+	::= { sysNot-Pars 23 }
+
+sysNotP-ParValues  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Multiple numeric values pairs list.
+		
+		Format: ID1:Value1 ID2:Value2 ... IDN:ValueN
+		
+		Local (ID/Value) Separator: Colon (0x3A)
+		Global (Pairs) Separator: Space (0x20)"
+	::= { sysNot-Pars 24 }
+
+sysNotP-ReceiverVersion  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Receiver Version: AABBCC (vAA.BB.CC). Example: 020304 = v2.3.4
+		
+		For Zabbix Short ACK ONLY"
+	::= { sysNot-Pars 25 }
+
+sysNotP-ParValuesV2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Multiple string values pairs list (UTF-8 chars).
+		
+		Format: ID1\nValue1\n\nID2\nValue2 ... IDN\nValueN
+		
+		Local (ID/Value) Separator: \n (0x0A)
+		Global (Pairs) Separator: \n\n (0x0A, 0x0A)
+		
+		Max Value Size: 127 chars"
+	::= { sysNot-Pars 26 }
+
+sysNotP-DateTimeEx  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS accessible-for-notify
+	STATUS     current
+	DESCRIPTION 
+		"Trap/Inform's Extended Date/Time (YYYY-MM-DD HH:MM:SS:sss)"
+	::= { sysNot-Pars 27 }
+
+sysNotL-Alive  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-DateTime, 
+		sysNotP-StatusWarning, 
+		sysNotP-StatusFailure }
+	STATUS     current
+	DESCRIPTION 
+		"Alive Trap/Inform"
+	::= { sysNot-List 1 }
+
+sysNotL-Message  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-SequenceNumber, 
+		sysNotP-DateTime, 
+		sysNotP-StatusWarning, 
+		sysNotP-StatusFailure, 
+		sysNotP-MessageText }
+	STATUS     current
+	DESCRIPTION 
+		"Information Message Inform"
+	::= { sysNot-List 2 }
+
+sysNotL-Warning  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-SequenceNumber, 
+		sysNotP-DateTime, 
+		sysNotP-StatusWarning, 
+		sysNotP-StatusFailure, 
+		sysNotP-MessageText }
+	STATUS     current
+	DESCRIPTION 
+		"Warning Inform"
+	::= { sysNot-List 3 }
+
+sysNotL-Failure  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-SequenceNumber, 
+		sysNotP-DateTime, 
+		sysNotP-StatusWarning, 
+		sysNotP-StatusFailure, 
+		sysNotP-MessageText }
+	STATUS     current
+	DESCRIPTION 
+		"Failure Inform"
+	::= { sysNot-List 4 }
+
+sysNotL-ParValue  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-ParDeviceType, 
+		sysNotP-DateTime, 
+		sysNotP-StatusWarning, 
+		sysNotP-StatusFailure, 
+		sysNotP-ParID, 
+		sysNotP-ParValue, 
+		sysNotP-ParStatus, 
+		sysNotP-ParDBSave, 
+		sysNotP-ParSequenceNumber }
+	STATUS     current
+	DESCRIPTION 
+		"Parameter Value Trap/Inform"
+	::= { sysNot-List 6 }
+
+sysNotL-MultipleNumValues  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-ParDeviceType, 
+		sysNotP-DateTime, 
+		sysNotP-GlobalStatus, 
+		sysNotP-ParValues }
+	STATUS     current
+	DESCRIPTION 
+		"Parameter Numeric Values Trap/Inform
+		
+		For Zabbix ONLY (rcu2zbx v2.3.2+)"
+	::= { sysNot-List 8 }
+
+sysNotL-MultipleStrValues  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-ParDeviceType, 
+		sysNotP-DateTime, 
+		sysNotP-GlobalStatus, 
+		sysNotP-ParValuesV2 }
+	STATUS     current
+	DESCRIPTION 
+		"Parameter String Values Trap/Inform
+		
+		For Zabbix ONLY (rcu2zbx v2.4.1+)"
+	::= { sysNot-List 9 }
+
+sysNotL-MultipleMixedValues  NOTIFICATION-TYPE
+	OBJECTS { sysNotP-RCSVersion, 
+		sysNotP-Name, 
+		sysNotP-DeviceID, 
+		sysNotP-Service, 
+		sysNotP-ParDeviceType, 
+		sysNotP-DateTimeEx, 
+		sysNotP-GlobalStatus, 
+		sysNotP-ParValues, 
+		sysNotP-ParValuesV2 }
+	STATUS     current
+	DESCRIPTION 
+		"Parameter Mixed (Numeric + String) Values Trap/Inform
+		
+		For Zabbix ONLY (rcu2zbx v2.5.3+)"
+	::= { sysNot-List 10 }
+
+sysCtlTx-IsBusy  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - Busy Status
+		
+		GET:
+		0 - No connection with all exciters
+		1 - All connected exciters are ready
+		2 - At least one exciter is busy"
+	::= { sys-TransmitterControls 1 }
+
+sysCtlTx-IsMuted  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - Mute Status/Control
+		
+		GET:
+		Bits 1-0 - Active exciter mute status
+		Bits 3-2 - Inactive exciter mute status
+		
+		Exciter mute status:
+		0 - Not muted
+		1 - Muted
+		2 - Unknown (no connection with exciter / control unit)
+		3 - Exciter unused (for inactive exciter)
+		
+		SET:
+		0 - Unmute all exciters
+		1 - Mute all exciters"
+	::= { sys-TransmitterControls 2 }
+
+sysCtlTx-InputProfile  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Transmitter - Input Profile Status/Control
+		
+		GET:
+		Bits 7-0 - Active exciter profile
+		Bits 15-8 - Inactive exciter profile
+		
+		Exciter profile:
+		0 - Profile 'ASI1 only'
+		1 - Profile 'ASI2 only'
+		2 - Profile 'TSoIP1 only'
+		3 - Profile 'TSoIP2 only'
+		8 - Invalid exciter configuration
+		9 - No profiles support (outdated firmware)
+		10 - Unknown (no connection with exciter / control unit)
+		11 - Exciter unused (for inactive exciter)
+		
+		SET:
+		0 - Switch all exciters to profile 'ASI1 only'
+		1 - Switch all exciters to profile 'ASI2 only'
+		2 - Switch all exciters to profile 'TSoIP1 only'
+		3 - Switch all exciters to profile 'TSoIP2 only'"
+	::= { sys-TransmitterControls 3 }
+
+sysCtlSssMain-OutputsTable  OBJECT-TYPE
+	SYNTAX SEQUENCE OF SysCtlSssMain-OutputsEntry
+	MAX-ACCESS not-accessible
+	STATUS     current
+	DESCRIPTION 
+		"For SSS 2+1:
+		Index 1 - Output-1
+		Index 2 - Output-2
+		Index 3 - Equivalent
+		
+		For SSS 3+1:
+		Index 1 - Output-1
+		Index 2 - Output-2
+		Index 3 - Output-3
+		Index 4 - Equivalent
+		
+		For SSS 4+1:
+		Index 1 - Output-1
+		Index 2 - Output-2
+		Index 3 - Output-3
+		Index 4 - Output-4
+		Index 5 - Equivalent"
+	::= { sysCtlSss-Main 1 }
+
+sysCtlSssMain-OutputsEntry  OBJECT-TYPE
+	SYNTAX 	SysCtlSssMain-OutputsEntry
+	MAX-ACCESS not-accessible
+	STATUS     current
+	DESCRIPTION 
+		""
+	INDEX { sysCtlSssMain-OutT-Mute }
+	::= { sysCtlSssMain-OutputsTable 1 }
+
+SysCtlSssMain-OutputsEntry ::= SEQUENCE {
+	sysCtlSssMain-OutT-Mute
+		INTEGER
+}
+
+sysCtlSssMain-OutT-Mute  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		na (-1),
+		unmute (0),
+		mute (1)
+	}
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Output - Mute: -1 - N/A, 0 - Unmute, 1 - Mute"
+	::= { sysCtlSssMain-OutputsEntry 1 }
+
+sysCtlSssMain-ReserveSwitch  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		busy (-2),
+		unknown (-1),
+		forbidden (0),
+		output-1 (1),
+		output-2 (2),
+		output-3-equivalent (3),
+		output-4 (4),
+		equivalent (5)
+	}
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Reserve General Switch
+		
+		For SSS 2+1:
+		-2 - Busy (GET)
+		-1 - Unknown (GET)
+		0 - Forbidden (GET)
+		1 - Output-1
+		2 - Output-2
+		3 - Equivalent (System Load)
+		
+		For SSS 3+1/4+1:
+		-2 - Busy (GET)
+		-1 - Unknown (GET)
+		0 - Forbidden (GET)
+		1 - Output-1
+		2 - Output-2
+		3 - Output-3
+		4 - Output-4 (For SSS 4+1)
+		5 - Equivalent (System Load)"
+	::= { sysCtlSss-Main 2 }
+
+sysCtlSssAuto-Enabled  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		off (0),
+		on (1)
+	}
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"AutoSwitching Enabled: 0 - Off, 1 - On"
+	::= { sysCtlSss-AutoSwitching 1 }
+
+sysCtlSssAuto-Priority  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		priority-None (0),
+		priority-Transmitter-1 (1),
+		priority-Transmitter-2 (2),
+		priority-Transmitter-3 (3)
+	}
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"AutoSwitching Priority:
+		0 - None
+		1 - Transmitter-1
+		2 - Transmitter-2
+		3 - Transmitter-3 (For SSS 3+1/4+1)"
+	::= { sysCtlSss-AutoSwitching 2 }
+
+sysCtlSssAuto-Exclusive  OBJECT-TYPE
+	SYNTAX     INTEGER {
+		off (0),
+		on (1)
+	}
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Exclusive AutoSwitch To Priority Transmitter: 0 - Off, 1 - On"
+	::= { sysCtlSss-AutoSwitching 3 }
+
+sysNot-Group  NOTIFICATION-GROUP
+	NOTIFICATIONS { sysNotL-Alive, 
+		sysNotL-Message, 
+		sysNotL-Warning, 
+		sysNotL-Failure, 
+		sysNotL-ParValue, 
+		sysNotL-MultipleNumValues, 
+		sysNotL-MultipleStrValues, 
+		sysNotL-MultipleMixedValues }
+	STATUS     current
+	DESCRIPTION 
+		""
+	::= { sys-Notifications 1 }
+END
+
+
+-- This MIB was created using NuDesign Technologies' Visual MIBuilder (Ver 6.3).
+

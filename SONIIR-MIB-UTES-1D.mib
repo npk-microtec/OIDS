@@ -1,0 +1,990 @@
+SONIIR-MIB DEFINITIONS ::= BEGIN
+
+--
+-- Top-level infrastructure of the SONIIR enterprise MIB tree
+--
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, enterprises FROM SNMPv2-SMI;
+
+soniir MODULE-IDENTITY
+    LAST-UPDATED "202007100000Z"
+    ORGANIZATION "www.soniir.ru"
+    CONTACT-INFO    
+	 "postal:   443011, Russian Federation,
+		    Samara, Sov.Army st., 217
+
+          email:    info@soniir.ru"
+    DESCRIPTION
+	"Top-level infrastructure of SONIIR enterprise MIB tree"
+    REVISION     "202007100000Z"
+    DESCRIPTION
+	"Fast fix"
+    ::= { enterprises 54111 }
+
+
+soniirTransmitter              OBJECT IDENTIFIER ::= { soniir 1 }
+
+
+utes                           OBJECT IDENTIFIER ::= { soniirTransmitter 1 }
+
+switch         OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS	current
+    DESCRIPTION
+        "0 - off, 1 - on"
+    ::= { utes 1 }
+
+power         OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS	current
+    DESCRIPTION
+        "Output power transmitter in W."
+    ::= { utes 2 }
+
+twr           OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Traveling wave ratio in %."
+    ::= { utes 3 }
+
+frequency     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Frequency in Hz."
+    ::= { utes 4 }
+
+temperature   OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Temperature in grad C."
+    ::= { utes 5 }
+
+
+currents                           OBJECT IDENTIFIER ::= { utes 6 }
+
+current1      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Currect in mA for transmitter #1."
+    ::= { currents 1 }
+
+current2      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Currect in mA for transmitter #2."
+    ::= { currents 2 }
+
+current3      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Currect in mA for transmitter #3."
+    ::= { currents 3 }
+
+current4      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Currect in mA for transmitter #4."
+    ::= { currents 4 }
+
+
+
+voltages                           OBJECT IDENTIFIER ::= { utes 7 }
+
+voltage1      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Voltage in mV for transmitter #1."
+    ::= { voltages 1 }
+
+voltage2      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Voltage in mV for transmitter #2."
+    ::= { voltages 2 }
+
+voltage3      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Voltage in mV for transmitter #3."
+    ::= { voltages 3 }
+
+voltage4      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Voltage in mV for transmitter #4."
+    ::= { voltages 4 }
+
+
+preampVoltage OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Preamp voltage in mV"
+    ::= { utes 8 }
+
+tempEth   OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Temperature of ethernet card in grad C."
+    ::= { utes 9 }
+
+levelAB OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Level A,B channels in dB"
+    ::= { utes 10 }
+
+balanceAB OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Balance A,B channels in dB"
+    ::= { utes 11 }
+
+inputKKS OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Input KKS in dB"
+    ::= { utes 12 }
+
+outputKKS OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Output KKS in dB"
+    ::= { utes 13 }
+
+switchAchannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Switch A Channel"
+    ::= { utes 14 }
+
+switchBchannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Switch B Channel"
+    ::= { utes 15 }
+
+digitalTypeSignal OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Type of signal (0-Analog, 1-Digital)"
+    ::= { utes 16 }
+
+inputKksType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-Off, 1-RDS, 2-KKS"
+    ::= { utes 17 }
+
+outputKksType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-KKS, 1-PT, 2-Off"
+    ::= { utes 18 }
+
+pm OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-PT, 1-PM"
+    ::= { utes 19 }
+
+stereoChannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-Mono, 1-Stereo"
+    ::= { utes 20 }
+
+switch50mks OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-Off, 1-50mks"
+    ::= { utes 21 }
+
+dF OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Fine tuning frequency in Hz"
+    ::= { utes 23 }
+
+preampCurrent OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Preamplifier current in mA"
+    ::= { utes 24 }
+
+voltage14 OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Analog source voltage in mV"
+    ::= { utes 25 }
+
+
+
+
+traps                           OBJECT IDENTIFIER ::= { utes 22 }
+
+transmitterOn NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Bad value for current of preamp."
+    ::= { traps 1 }
+
+transtitterOff NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Bad value for current of preamp."
+    ::= { traps 2 }
+
+workWithFaults NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Work with faults"
+    ::= { traps 3 }
+
+fault NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Fault"
+    ::= { traps 4 }
+
+outputPowerError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Output power error."
+    ::= { traps 5 }
+
+twrError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "TWR error."
+    ::= { traps 6 }
+
+preampCurrentError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Bad value for current of preamp."
+    ::= { traps 7 }
+
+current1Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 1 error."
+    ::= { traps 8 }
+
+current2Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 2 error."
+    ::= { traps 9 }
+
+current3Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 3 error."
+    ::= { traps 10 }
+
+current4Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 4 error."
+    ::= { traps 11 }
+
+temperatureError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Temperature error."
+    ::= { traps 12 }
+
+voltage14Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 14 error."
+    ::= { traps 13 }
+
+voltage1Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 1 error."
+    ::= { traps 14 }
+
+voltage2Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 2 error."
+    ::= { traps 15 }
+
+voltage3Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 3 error."
+    ::= { traps 16 }
+
+voltage4Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 4 error."
+    ::= { traps 17 }
+
+inputSignalError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Input signal error."
+    ::= { traps 18 }
+
+noInputProgramError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "No Input Program error."
+    ::= { traps 19 }
+
+switchOffByTimerError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Switch off by timer error."
+    ::= { traps 20 }
+
+fastDefendByTwr NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Fast defend by TWR."
+    ::= { traps 21 }
+
+noPhaseError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "No phase error."
+    ::= { traps 22 }
+
+
+
+
+
+br                             OBJECT IDENTIFIER ::= { soniirTransmitter 2 }
+
+brswitch         OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS	current
+    DESCRIPTION
+        "0 - off, 1 - on"
+    ::= { br 1 }
+
+brmainCrash      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS	current
+    DESCRIPTION
+        "0 - norm, 1 - crash"
+    ::= { br 2 }
+
+brreserveCrash   OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS	current
+    DESCRIPTION
+        "0 - norm, 1 - crash"
+    ::= { br 3 }
+
+brmainNotResponse OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS	current
+    DESCRIPTION
+        "0 - norm, 1 - not response"
+    ::= { br 4 }
+
+brreserveNotResponse OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS	current
+    DESCRIPTION
+        "0 - norm, 1 - not response"
+    ::= { br 5 }
+
+brcommOnReserve  OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS	current
+    DESCRIPTION
+        "0 - norm, 1 - commutation on reserve"
+    ::= { br 6 }
+
+brreserveMode    OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS	current
+    DESCRIPTION
+        "0 - auto, 1 - manual main, 2 - manual reserve"
+    ::= { br 7 }
+
+brfreq            OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Frequency in Hz."
+    ::= { br 8 }
+
+brpower           OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS  current
+    DESCRIPTION
+        "Output power transmitter in W."
+    ::= { br 9 }
+
+brtwr             OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Traveling wave ratio in %."
+    ::= { br 10 }
+
+brtemperature   OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Temperature in grad C."
+    ::= { br 11 }
+
+brtempEth   OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "Temperature of ethernet card in grad C."
+    ::= { br 12 }
+
+brum1Voltage14    OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 analog source voltage in mV"
+    ::= { br 13 }
+
+brum1PreampCurrent OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 preamplifier current in mA"
+    ::= { br 14 }
+
+brum1Current1     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 currect in mA for transmitter #1."
+    ::= { br 15 }
+
+brum1Current2     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 currect in mA for transmitter #2."
+    ::= { br 16 }
+
+brum1Current3     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 currect in mA for transmitter #3."
+    ::= { br 17 }
+
+brum1Current4     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 currect in mA for transmitter #4."
+    ::= { br 18 }
+
+brum1Voltage1      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 voltage in mV for transmitter #1."
+    ::= { br 19 }
+
+brum1Voltage2      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 voltage in mV for transmitter #2."
+    ::= { br 20 }
+
+brum1Voltage3      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 voltage in mV for transmitter #3."
+    ::= { br 21 }
+
+brum1Voltage4      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 voltage in mV for transmitter #4."
+    ::= { br 22 }
+
+brum1Temperature  OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM1 temperature in grad C."
+    ::= { br 23 }
+
+brum2Voltage14    OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 analog source voltage in mV"
+    ::= { br 24 }
+
+brum2PreampCurrent OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 preamplifier current in mA"
+    ::= { br 25 }
+
+brum2Current1     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 currect in mA for transmitter #1."
+    ::= { br 26 }
+
+brum2Current2     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 currect in mA for transmitter #2."
+    ::= { br 27 }
+
+brum2Current3     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 currect in mA for transmitter #3."
+    ::= { br 28 }
+
+brum2Current4     OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 currect in mA for transmitter #4."
+    ::= { br 29 }
+
+brum2Voltage1      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 voltage in mV for transmitter #1."
+    ::= { br 30 }
+
+brum2Voltage2      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 voltage in mV for transmitter #2."
+    ::= { br 31 }
+
+brum2Voltage3      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 voltage in mV for transmitter #3."
+    ::= { br 32 }
+
+brum2Voltage4      OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 voltage in mV for transmitter #4."
+    ::= { br 33 }
+
+brum2Temperature  OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+        "UM2 temperature in grad C."
+    ::= { br 34 }
+
+brsetLevelAB OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Level A,B channels in dB"
+    ::= { br 35 }
+
+brsetBalanceAB OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Balance A,B channels in dB"
+    ::= { br 36 }
+
+brinKKS OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Input KKS in dB"
+    ::= { br 37 }
+
+broutKKS OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Output KKS in dB"
+    ::= { br 38 }
+
+brdF OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Fine tuning frequency in Hz"
+    ::= { br 39 }
+
+brswitchAchannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Switch A Channel"
+    ::= { br 40 }
+
+brswitchBchannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Switch B Channel"
+    ::= { br 41 }
+
+brdigitalTypeSignal OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Type of signal (0-Analog, 1-Digital)"
+    ::= { br 42 }
+
+brinputKksType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-Off, 1-RDS, 2-KKS"
+    ::= { br 43 }
+
+broutputKksType OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-KKS, 1-PT, 2-Off"
+    ::= { br 44 }
+
+brpm OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-PT, 1-PM"
+    ::= { br 45 }
+
+brstereoChannel OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-Mono, 1-Stereo"
+    ::= { br 46 }
+
+brswitch50mks OBJECT-TYPE
+    SYNTAX      INTEGER
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "0-Off, 1-50mks"
+    ::= { br 47 }
+
+brtraps                           OBJECT IDENTIFIER ::= { br 48 }
+
+brtransmitterOn NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Bad value for current of preamp."
+    ::= { brtraps 1 }
+
+brtranstitterOff NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Bad value for current of preamp."
+    ::= { brtraps 2 }
+
+brworkWithFaults NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Work with faults"
+    ::= { brtraps 3 }
+
+brfault NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Fault"
+    ::= { brtraps 4 }
+
+broutputPowerError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Output power error."
+    ::= { brtraps 5 }
+
+brtwrError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "TWR error."
+    ::= { brtraps 6 }
+
+brpreampCurrentError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Bad value for current of preamp."
+    ::= { brtraps 7 }
+
+brcurrent1Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 1 error."
+    ::= { brtraps 8 }
+
+brcurrent2Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 2 error."
+    ::= { brtraps 9 }
+
+brcurrent3Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 3 error."
+    ::= { brtraps 10 }
+
+brcurrent4Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Current 4 error."
+    ::= { brtraps 11 }
+
+brtemperatureError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Temperature error."
+    ::= { brtraps 12 }
+
+brvoltage14Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 14 error."
+    ::= { brtraps 13 }
+
+brvoltage1Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 1 error."
+    ::= { brtraps 14 }
+
+brvoltage2Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 2 error."
+    ::= { brtraps 15 }
+
+brvoltage3Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 3 error."
+    ::= { brtraps 16 }
+
+brvoltage4Error NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Voltage 4 error."
+    ::= { brtraps 17 }
+
+brinputSignalError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Input signal error."
+    ::= { brtraps 18 }
+
+brnoInputProgramError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "No Input Program error."
+    ::= { brtraps 19 }
+
+brswitchOffByTimerError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Switch off by timer error."
+    ::= { brtraps 20 }
+
+brfastDefendByTwr NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "Fast defend by TWR."
+    ::= { brtraps 21 }
+
+brnoPhaseError NOTIFICATION-TYPE
+    STATUS      currect
+    DESCRIPTION
+        "No phase error."
+    ::= { brtraps 22 }
+
+--  ospfVirtIfStateChange NOTIFICATION-TYPE
+--       OBJECTS { ospfRouterId,
+--          ospfVirtIfAreaId,
+--          ospfVirtIfNeighbor,
+--          ospfVirtIfState
+--          }
+--       STATUS       current
+--       DESCRIPTION
+--          "An ospfVirtIfStateChange trap signifies that there
+--          has been a change in the state of an OSPF virtual
+--          interface.
+--
+--          This trap should be generated when the interface
+--          state regresses (e.g., goes from Point-to-Point to Down)
+--          or progresses to a terminal state
+--          (i.e., Point-to-Point)."
+--       ::= { ospfTraps 1 }
+
+--
+--  Net-SNMP enterprise-specific management objects
+--
+
+-- netSnmpObjects              OBJECT IDENTIFIER ::= {netSnmp 1}
+-- netSnmpExamples             OBJECT IDENTIFIER ::= {netSnmp 2}
+-- netSnmpEnumerations         OBJECT IDENTIFIER ::= {netSnmp 3}
+-- netSnmpModuleIDs            OBJECT IDENTIFIER ::= {netSnmpEnumerations 1}
+-- netSnmpAgentOIDs            OBJECT IDENTIFIER ::= {netSnmpEnumerations 2}
+-- netSnmpDomains              OBJECT IDENTIFIER ::= {netSnmpEnumerations 3}
+-- netSnmpExperimental         OBJECT IDENTIFIER ::= {netSnmp 9999}
+
+--
+-- A subtree specifically designed for private testing purposes.
+-- No "public" management objects should ever be defined within this tree.
+--
+-- It is provided for private experimentation, prior to transferring a MIB
+-- structure to another part of the overall OID tree
+--
+-- netSnmpPlaypen              OBJECT IDENTIFIER ::= {netSnmpExperimental 9999}
+
+
+--
+--  Notifications
+--
+
+-- netSnmpNotificationPrefix   OBJECT IDENTIFIER ::= {netSnmp 4}
+-- netSnmpNotifications        OBJECT IDENTIFIER ::= {netSnmpNotificationPrefix 0}
+-- netSnmpNotificationObjects  OBJECT IDENTIFIER ::= {netSnmpNotificationPrefix 1}
+
+
+--
+--  Conformance
+--     (No laughing at the back!)
+--
+
+-- netSnmpConformance          OBJECT IDENTIFIER ::= {netSnmp 5}
+-- netSnmpCompliances          OBJECT IDENTIFIER ::= {netSnmpConformance 1}
+-- netSnmpGroups               OBJECT IDENTIFIER ::= {netSnmpConformance 2}
+
+END

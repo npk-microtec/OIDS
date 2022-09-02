@@ -1,0 +1,2790 @@
+TTV-MDT2-MIB DEFINITIONS ::= BEGIN
+-- Top-level infrastructure of the TTV-MDT2-MIB projects enterprise MIB tree
+
+IMPORTS
+    OBJECT-GROUP, NOTIFICATION-GROUP FROM SNMPv2-CONF
+    MODULE-IDENTITY, OBJECT-TYPE, NOTIFICATION-TYPE, enterprises,
+    Integer32, Unsigned32, IpAddress
+        FROM SNMPv2-SMI;
+
+--- Module Identity
+
+triadatv MODULE-IDENTITY
+    LAST-UPDATED    "202204131445Z"
+    ORGANIZATION    "OOO NPP Triada TV"
+    CONTACT-INFO    "Nobosibirsk, Russia"
+    DESCRIPTION     "Modulator DVB-T2 Agent level MIB .1.3.6.1.4.1.31339.49100"
+::= { enterprises 31339 }
+
+--- Node Definitions
+
+ttv-mdt2       OBJECT IDENTIFIER ::= { triadatv 49100 }
+
+nl-prec-status OBJECT-GROUP
+    OBJECTS      { nl-prec-attenuation, nl-prec-level-status, nl-prec-input-power, nl-prec-error-id, nl-prec-error-message, nl-shoudlers, nl-iteration, nl-adapt-status, nl-iteration-time, nl-prev-iter-duration, nl-avg-power, nl-avg-power-dbm, nl-not-saved }
+    STATUS       current
+    DESCRIPTION  "Adaptive nonlinear precorrector status values"
+::= { ttv-mdt2 30 }
+
+alarms OBJECT-GROUP
+    OBJECTS      { errors, amp-errors, warnings, warnings-h, messages, mute-reason }
+    STATUS       current
+    DESCRIPTION  "Errors, warnings and messages flags state."
+::= { ttv-mdt2 12 }
+
+clocking OBJECT-GROUP
+    OBJECTS      { sel-ref-src, ext-1pps-dir, ext-10mhz-dir }
+    STATUS       current
+    DESCRIPTION  "Clocking subsystem management."
+::= { ttv-mdt2 13 }
+
+gpsStatus OBJECT-GROUP
+    OBJECTS      { gps-on-board, is-gps-ok, ant-status, is-gps-lock, gps-sats-in-view, gln-sats-in-view, gps-sats-in-use, gln-sats-in-use, hours, minutes, seconds, day, month, year, time-of-day, longitude, latitude, sync-mode, gps-version }
+    STATUS       current
+    DESCRIPTION  "GLONASS/GPS receiver state."
+::= { ttv-mdt2 10 }
+
+ampStatus OBJECT-GROUP
+    OBJECTS      { amp-model, amp-number, amp-serial-number, amp-output-power, input-power, reflected-power, temperature1, temperature2, current1, current2, current3, current4, current5, current6, current7, current8, current9, current10, current11, current12, current13, current14, current15, current16, current17, current18, current19, status-word, gain, threshold-pin, threshold-pref, temp-comp }
+    STATUS       current
+    DESCRIPTION  "Embedded amplifier state."
+::= { ttv-mdt2 11 }
+
+t2mi OBJECT-GROUP
+    OBJECTS      { delay-offset-subseconds, ts-mode-bw, ts-mode-network-id, ts-mode-t2-system-id, ts-mode-cell-id, force-mfn, force-relative-sfn, ts-mode-l1-mod, ts-mode-fft-mode, ts-mode-fft-mode-ext, ts-mode-gi-fraction, ts-mode-pp, ts-mode-t2f-num, ts-mode-ds-num, ia-tx-identifier, ts-mode-l1-post-scrambled, ts-mode-subslices-per-frame, ts-mode-t2-version, ts-mode-inband-a, ts-mode-inband-b }
+    STATUS       current
+    DESCRIPTION  "Modulation DVB-T2 general parameters management."
+::= { ttv-mdt2 16 }
+
+plp OBJECT-GROUP
+    OBJECTS      { ts-adapter-en, ts-mode-plp-id, ts-mode-plp-group-id, ts-mode-plp-type, ts-mode-nm-hem, ts-mode-null-packet-del-en, ts-mode-issy-en, ts-mode-issy-type, ts-mode-plp-fec-type, ts-mode-plp-cod, ts-mode-plp-mod, ts-mode-plp-rot, ts-mode-plp-ti-type, ts-mode-plp-ti-len, ts-mode-plp-num-blocks }
+    STATUS       current
+    DESCRIPTION  "PLP parameters management in System A."
+::= { ttv-mdt2 17 }
+
+output OBJECT-GROUP
+    OBJECTS      { mute, attenuation, frequency, channel, ts-output-mux, ext-rf-lock-en, rf-maintain }
+    STATUS       current
+    DESCRIPTION  "Outputs state management."
+::= { ttv-mdt2 14 }
+
+inputs OBJECT-GROUP
+    OBJECTS      { input-type, prim-mute, prim-pid, ts-input-mux-0, ts-input-mux-1, ts-switching-policy, ts-valid-packet-threshold }
+    STATUS       current
+    DESCRIPTION  "Inputs state management."
+::= { ttv-mdt2 15 }
+
+t2Replacement OBJECT-GROUP
+    OBJECTS      { cell-id-0-local, cell-id-0-sel, miso-group-0-local, miso-group-0-sel, rf-frequency-replace-en, inband-replacement-en, delay-offset-sel }
+    STATUS       current
+    DESCRIPTION  "L1 signalling fields replacement management."
+::= { ttv-mdt2 18 }
+
+gps OBJECT-GROUP
+    OBJECTS      { ant-voltage, pps-mark-type, nav-system }
+    STATUS       current
+    DESCRIPTION  "GLONASS/GPS receiver management."
+::= { ttv-mdt2 19 }
+
+nl-prec-ctrl OBJECT-GROUP
+    OBJECTS      { nl-prec-mode, nl-prec-manual-mode, nl-prec-autostart-th, nl-prec-is-averaging-on, nl-prec-averaging-length, nl-prec-out-limit-db, nl-gain-offset-db, nl-reset, nl-save }
+    STATUS       current
+    DESCRIPTION  "Adaptive nonlinear precorrector controls"
+::= { ttv-mdt2 29 }
+
+lin-prec-status OBJECT-GROUP
+    OBJECTS      { lin-prec-attenuation, lin-prec-level-status, lin-prec-input-power, lin-prec-error-id, lin-prec-error-message, lin-prec-resp-delta, lin-iteration, lin-adapt-status, lin-iteration-time, lin-prev-iter-duration, lin-avg-power, lin-avg-power-dbm, lin-not-saved }
+    STATUS       current
+    DESCRIPTION  "Adaptive linear precorrector status values"
+::= { ttv-mdt2 28 }
+
+pre-correctors OBJECT-GROUP
+    OBJECTS      { lin-en, nonlin-en, crest-factor }
+    STATUS       current
+    DESCRIPTION  "Pre-correctors control"
+::= { ttv-mdt2 23 }
+
+tsoip OBJECT-GROUP
+    OBJECTS      { mc-group-1, tsoip-port-1, mc-group-2, tsoip-port-2, primary-ip, ip-clever-switch, ip-auto-switch-back, valid-packed-threshold, error-packed-threshold, active-index, ts-packets-num-1, ts-stable-1, is-rtp-1, is-188-size-1, ts-packets-num-2, ts-stable-2, is-rtp-2, is-188-size-2, rtp-mpts-received, rtp-mpts-recovered, rtp-mpts-duplicated, rtp-mpts-missing, fec-l, fec-d, rtp-per }
+    STATUS       current
+    DESCRIPTION  "TSoIP subsystem management."
+::= { ttv-mdt2 22 }
+
+network OBJECT-GROUP
+    OBJECTS      { ipaddr-0, netmask-0, gateway-0, dhcp-0, vlan-0, ipaddr-1, netmask-1, gateway-1, dhcp-1, vlan-1, link-switch, link-tsoip1, link-eth0, link-lan1, link-tsoip2, link-lan2 }
+    STATUS       current
+    DESCRIPTION  "Networking settings management."
+::= { ttv-mdt2 21 }
+
+amp OBJECT-GROUP
+    OBJECTS      { kp-up, kp-down, tk-on, tk-off, with-amp }
+    STATUS       current
+    DESCRIPTION  "Embedded amplifier management."
+::= { ttv-mdt2 20 }
+
+lin-prec-ctrl OBJECT-GROUP
+    OBJECTS      { lin-prec-mode, lin-prec-manual-mode, lin-prec-autostart-th, lin-pre-tilt, lin-prec-is-averaging-on, lin-prec-averaging-length, lin-reset, lin-save }
+    STATUS       current
+    DESCRIPTION  "Adaptive linear precorrector controls"
+::= { ttv-mdt2 27 }
+
+test-modes OBJECT-GROUP
+    OBJECTS      { test-signal-mode }
+    STATUS       current
+    DESCRIPTION  "Test modes control"
+::= { ttv-mdt2 24 }
+
+hidden OBJECT-GROUP
+    OBJECTS      { ajax-period, ajax-timeout, device-name, is-channel-ctrl-en, language, pout-coef, offset-i, offset-q, trs-active-profile }
+    STATUS       current
+    DESCRIPTION  "Common hidden parameters."
+::= { ttv-mdt2 1 }
+
+versions OBJECT-GROUP
+    OBJECTS      { active-bank, fpga, hardware, model, next-software, serial-number, software, web }
+    STATUS       current
+    DESCRIPTION  "Versions information."
+::= { ttv-mdt2 2 }
+
+status OBJECT-GROUP
+    OBJECTS      { board-current, board-temperature, common-status, output-power, pl-vcc-aux, pl-vcc-bram, pl-vcc-int, pl-vcc-paux, pl-vcc-pint, pl-vcco-ddr, dpd-opt-name, output-power-dbm }
+    STATUS       current
+    DESCRIPTION  "Information about current state of modulator."
+::= { ttv-mdt2 3 }
+
+inputsStatus OBJECT-GROUP
+    OBJECTS      { actual-input, asi0-188-204, asi0-ts-synchro, asi1-188-204, asi1-ts-synchro, bitrate-asi0, bitrate-asi1, bitrate-tsoip, byte-rate-post-ts-adapter, delay-offset-min, delay-offset-seconds-min, mfn-sfn-mode, sfn-type, utco, t2-mi-pid0-status, ts-carrier-lost-asi0, ts-carrier-lost-asi1, ts-primary-stable, ts-secondary-stable, asi1-stable, asi2-stable, ts-sp-lock-0, ts-sp-lock-1, ts-syn-lock, ts-throughput, tsoip-188-204, tsoip-ts-synchro }
+    STATUS       current
+    DESCRIPTION  "Inputs status and their operating mode."
+::= { ttv-mdt2 4 }
+
+clockingStatus OBJECT-GROUP
+    OBJECTS      { osz10mhz-ext-status-color, pps-ext-status-color, actual-ref-src, external-10mhz-ok, external-pps-ok, gps-dac-value, gps-status-color, pps-hold, pps-pll-lock, ref-osc-ok, ref-osc-pll-lock, sys-10mhz-ok, sys-pps-status-color, sys-clock-status-color, sys-pps-ok }
+    STATUS       current
+    DESCRIPTION  "Clocking subsystem state."
+::= { ttv-mdt2 5 }
+
+t2miStatus OBJECT-GROUP
+    OBJECTS      { bw, cell-id, ds-num, fft-mode, fft-mode-ext, gi-fraction, l1-cod, l1-fec-type, l1-mod, l1-post-extension-flag, l1-post-scrambled, l1-repetition-flag, miso-group, network-id, p2-bias-bal-cell-len, plp-num, pp, regen-flag, rf-frequency, s1, subslices-per-frame, sys-a-max-throughput, t2-lite-compatible, t2-system-id, t2-version, t2f-num }
+    STATUS       current
+    DESCRIPTION  "General parameters state of DVB-T2 core (both for system A and system B)."
+::= { ttv-mdt2 6 }
+
+t2PlpStatus OBJECT-GROUP
+    OBJECTS      { plp-id, issy-type, issy-en, null-packet-del-en, nm-hem, plp-bitrate, plp-type, first-frame-idx, plp-group-id, plp-cod, plp-mod, plp-rot, plp-fec-type, plp-num-blocks, frame-interval, plp-ti-len, plp-ti-type, inband-a-flag, inband-b-flag, static-flag, static-padding-flag }
+    STATUS       current
+    DESCRIPTION  "Table of stream PLPs."
+::= { ttv-mdt2 7 }
+
+iaSignallingStatus OBJECT-GROUP
+    OBJECTS      { ia-cell-id-0-mon, ia-cell-id-valid-0-mon, ia-delay-offset-0-mon, ia-delay-offset-valid-0-mon, ia-l1-ace-papr-max-0-mon, ia-l1-ace-papr-max-valid-0-mon, ia-miso-group-0-mon, ia-miso-group-valid-0-mon, ia-tx-freq-offset-0-mon, ia-tx-freq-offset-valid-0-mon }
+    STATUS       current
+    DESCRIPTION  "Individual Addressing fields state in System B."
+::= { ttv-mdt2 9 }
+
+traps NOTIFICATION-GROUP
+    NOTIFICATIONS  { errors-trap, amp-errors-trap, warnings-trap, warnings-h-trap, messages-trap }
+    STATUS         current
+    DESCRIPTION    "SNMP TRAPs."
+::= { ttv-mdt2 26 }
+
+
+ajax-period OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Period between AJAX requests of WEB interface, ms (from 500 to 60000 ms)"
+::= { hidden 1 }
+
+ajax-timeout OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Timeout of AJAX request of WEB interface, ms (from 5000 to 60000 ms)"
+::= { hidden 2 }
+
+device-name OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Device name, length <= 25 symbols"
+::= { hidden 3 }
+
+is-channel-ctrl-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Permission flag of TV channel switching from front panel (1 - enable, 0 - disable)"
+::= { hidden 4 }
+
+language OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Interface language (0 - RUS, 1 - ENG)"
+::= { hidden 5 }
+
+pout-coef OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Calibration factor of output power measurement (*10000)"
+::= { hidden 6 }
+
+offset-i OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Crest correction at 600 Mhz by I commponent (-32... 31)"
+::= { hidden 7 }
+
+offset-q OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Crest correction at 600 Mhz by Q commponent (-32... 31)"
+::= { hidden 8 }
+
+trs-active-profile OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Transmitter redundancy system active provile (0... 255; 0 - Profile is not set)"
+::= { hidden 14 }
+
+active-bank OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Bank number with current firmware (0 or 1)"
+::= { versions 1 }
+
+fpga OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Bitstream version of FPGA"
+::= { versions 2 }
+
+hardware OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Hardware version"
+::= { versions 3 }
+
+model OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Model name"
+::= { versions 4 }
+
+next-software OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Software version of next firmware bank"
+::= { versions 5 }
+
+serial-number OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Serial number"
+::= { versions 6 }
+
+software OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Software version of current firmware bank"
+::= { versions 7 }
+
+web OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Web interface version"
+::= { versions 8 }
+
+board-current OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Total supply current, mA"
+::= { status 1 }
+
+board-temperature OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Temperature on PCB, C"
+::= { status 2 }
+
+common-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Common status (0=Normal (green), 1=Has errors (red) 2=Has warnings (yellow)"
+::= { status 3 }
+
+output-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Output power after calibration mW*10 (0...999)"
+::= { status 5 }
+
+pl-vcc-aux OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal PL voltage Vccaux, mV (auxilary power source)"
+::= { status 7 }
+
+pl-vcc-bram OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal PL voltage Vccbram, mV (BRAM power source)"
+::= { status 8 }
+
+pl-vcc-int OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal PL voltage Vccint, mV (power source)"
+::= { status 9 }
+
+pl-vcc-paux OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal PL voltage Vccpaux, mV (auxilary power source)"
+::= { status 10 }
+
+pl-vcc-pint OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal PL voltage Vccpint, mV (power source)"
+::= { status 11 }
+
+pl-vcco-ddr OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal PL voltage Vccoddr, mV (power source of DDR output buffers)"
+::= { status 12 }
+
+dpd-opt-name OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Digital Pre-Distortion (DPD) hardware option name"
+::= { status 15 }
+
+output-power-dbm OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Output power after calibration dBm*10 (-999...+999)"
+::= { status 16 }
+
+actual-input OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Actual input, (0 - primary, 1 -secondary, 2 - test signal)"
+::= { inputsStatus 1 }
+
+asi0-188-204 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 0 188 / 204 packet size, (0 - 188 bits, 1 - 204 bits)"
+::= { inputsStatus 2 }
+
+asi0-ts-synchro OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 0 TS synchro lock, (1 - has synchro, 0 - synchro lose)"
+::= { inputsStatus 3 }
+
+asi1-188-204 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 1 188 / 204 packet size, (0 - 188 bits, 1 - 204 bits)"
+::= { inputsStatus 4 }
+
+asi1-ts-synchro OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 1 TS synchro lock, (1 - has synchro, 0 - synchro lose)"
+::= { inputsStatus 5 }
+
+bitrate-asi0 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 0 bitrate, b/s"
+::= { inputsStatus 6 }
+
+bitrate-asi1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 1 bitrate, b/s"
+::= { inputsStatus 7 }
+
+bitrate-tsoip OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "TS over IP bitrate, b/s"
+::= { inputsStatus 8 }
+
+byte-rate-post-ts-adapter OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Bitrate after TS adaptation Kb/s"
+::= { inputsStatus 9 }
+
+delay-offset-min OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Min bound on SFN emission time offset in 100ns units"
+::= { inputsStatus 10 }
+
+delay-offset-seconds-min OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "SFN delay offset, seconds (in absolute emission time mode)"
+::= { inputsStatus 11 }
+
+mfn-sfn-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "SFN/MFN (0 - MFN, 1 - SFN)"
+::= { inputsStatus 12 }
+
+sfn-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "SFN type (0 - relative emission time, 1 - absolute emission time)"
+::= { inputsStatus 13 }
+
+utco OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Difference between UTC and DVB-T2 scales, in seconds with sign"
+::= { inputsStatus 14 }
+
+t2-mi-pid0-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Status of T2-MI stream (PID 0) (0 - unlocked, 1 - locked, 2 - locked with errors)"
+::= { inputsStatus 15 }
+
+ts-carrier-lost-asi0 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 0 carrier lock (0 - locked, 1 - lost)"
+::= { inputsStatus 17 }
+
+ts-carrier-lost-asi1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 1 carrier lock (0 - locked, 1 - lost)"
+::= { inputsStatus 18 }
+
+ts-primary-stable OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Primary stability (1 - stable, 0 - unstable)"
+::= { inputsStatus 19 }
+
+ts-secondary-stable OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Secondary stability (1 - stable, 0 - unstable)"
+::= { inputsStatus 20 }
+
+asi1-stable OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI1 stability (1 - stable, 0 - unstable)"
+::= { inputsStatus 21 }
+
+asi2-stable OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI2 stability (1 - stable, 0 - unstable)"
+::= { inputsStatus 22 }
+
+ts-sp-lock-0 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 0 presence of K28.5 (0 - lack, 1 - presence)"
+::= { inputsStatus 23 }
+
+ts-sp-lock-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ASI 1 presence of K28.5 (0 - lack, 1 - presence)"
+::= { inputsStatus 24 }
+
+ts-syn-lock OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "TS Lock (0 - unlocked, 1 - locked, 2 - locked with errors)"
+::= { inputsStatus 25 }
+
+ts-throughput OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Input throughput, Kb/s"
+::= { inputsStatus 26 }
+
+tsoip-188-204 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "TS over IP: 188 / 204 packet size (0 - 188 bits, 1 - 204 bits)"
+::= { inputsStatus 28 }
+
+tsoip-ts-synchro OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "TS over IP: TS synchro lock (1 - has synchro, 0 - synchro lose)"
+::= { inputsStatus 29 }
+
+osz10mhz-ext-status-color OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "External 10 Mhz status (0 - red, 1 - gray-red, 2 - yellow, 3 - green)"
+::= { clockingStatus 1 }
+
+pps-ext-status-color OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "External 1PPS status (0 - red, 1 - gray-red, 2 - yellow, 3 - green)"
+::= { clockingStatus 2 }
+
+actual-ref-src OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Actual clocking reference source (0 - internal, 1 - external 1PPS, 2 - external 10 Mhz, 3 - GPS)"
+::= { clockingStatus 3 }
+
+external-10mhz-ok OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "External 10 Mhz latch state (1 - latch, 0 - not latch)"
+::= { clockingStatus 4 }
+
+external-pps-ok OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "External 1PPS latch state (1 - latch, 0 - not latch)"
+::= { clockingStatus 5 }
+
+gps-dac-value OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GPS DAC value"
+::= { clockingStatus 6 }
+
+gps-status-color OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "1PPS of GLONASS/GPS module (0 - red, 1 - gray-red, 2 - yellow, 3 - green)"
+::= { clockingStatus 7 }
+
+pps-hold OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GPS holdover latch state (1 -latch, 0 -not latch)"
+::= { clockingStatus 8 }
+
+pps-pll-lock OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GPS PLL lock latch state (1 - latch, 0 - not latch)"
+::= { clockingStatus 9 }
+
+ref-osc-ok OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Reference oscillator OK latch (1 - latch, 0 - not latch)"
+::= { clockingStatus 10 }
+
+ref-osc-pll-lock OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Reference oscillator PLL lock (1 - locked, 0 - unlocked)"
+::= { clockingStatus 11 }
+
+sys-10mhz-ok OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "System 10 Mhz state (1 - latch, 0 - not latch)"
+::= { clockingStatus 12 }
+
+sys-pps-status-color OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal 1PPS status (0 - red, 1 - gray-red, 2 - yellow, 3 - green)"
+::= { clockingStatus 13 }
+
+sys-clock-status-color OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Internal 10 Mhz status (0 - red, 1 - gray-red, 2 - yellow, 3 - green)"
+::= { clockingStatus 14 }
+
+sys-pps-ok OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "System 1PPS state (1 - latch, 0 - not latch)"
+::= { clockingStatus 15 }
+
+bw OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Bandwidth (0 - 1.7 MHz, 1 - 5 MHz, 2 - 6 MHz, 3 - 7 MHz, 4 - 8 MHz, 5 - 10 MHz"
+::= { t2miStatus 1 }
+
+cell-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Cell Identifier (CELL_ID L1 field)"
+::= { t2miStatus 2 }
+
+ds-num OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of data symbol per T2 frame (NUM_DATA_SYMBOLS L1 field)"
+::= { t2miStatus 3 }
+
+fft-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "FFT size (0 - 1K, 1 - 2K, 2 - 4K, 3 - 8K, 4 - 16K, 5 - 32K)"
+::= { t2miStatus 4 }
+
+fft-mode-ext OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "FFT extended (BWT_EXT L1 field) (1 - yes, 0 - no)"
+::= { t2miStatus 5 }
+
+gi-fraction OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Guard interval (GUARD_INTERVAL L1 field) (0 - 1/32, 1 - 1/16, 2 - 1/8, 3 - 1/4, 4 - 1/128, 5 - 19/128, 6 - 19/256)"
+::= { t2miStatus 6 }
+
+l1-cod OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1 code rate (L1_COD L1 field) (0 - 1/2, 1... 3 - Reserved)"
+::= { t2miStatus 7 }
+
+l1-fec-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1 FEC type (L1_FEC_TYPE L1 field) (0 - LDPC 16K, 1... 3 - Reserved)"
+::= { t2miStatus 8 }
+
+l1-mod OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1 Constellation (L1_MOD L1 field) (0 - BPSK, 1 - QPSK, 2 - 16QAM, 3 - 64QAM"
+::= { t2miStatus 9 }
+
+l1-post-extension-flag OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1-post extension flag (L1_POST_EXTENSION L1 field) (0 - off, 1 - on)"
+::= { t2miStatus 10 }
+
+l1-post-scrambled OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1-post scrambled flag (L1_POST_SCRAMBLED L1 field) (0 - off, 1 - on)"
+::= { t2miStatus 11 }
+
+l1-repetition-flag OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1 repetition flag (L1_REPETITION_FLAG L1 field) (0 - off, 1 - on)"
+::= { t2miStatus 12 }
+
+miso-group OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "MISO group (0 - Group 1, 1 - Group 2)"
+::= { t2miStatus 13 }
+
+network-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Network Identifier (NETWORK_ID L1 field)"
+::= { t2miStatus 14 }
+
+p2-bias-bal-cell-len OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of P2 Bias balancing cells"
+::= { t2miStatus 15 }
+
+plp-num OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of PLPs (NUM_PLP L1 field)"
+::= { t2miStatus 17 }
+
+pp OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Pilot Pattern (PILOT_PATTERN L1 field) (0 - PP1, 1 - PP2, 2 - PP3, 3 - PP4, 4 - PP5, 5 - PP6, 6 - PP7, 7 - PP8"
+::= { t2miStatus 18 }
+
+regen-flag OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Regeneration number of DVB-T2 signal (REGEN_FLAG L1 field) (0 - off, 1 - on)"
+::= { t2miStatus 19 }
+
+rf-frequency OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1 RF Frequency (FREQUENCY L1 field), Hz"
+::= { t2miStatus 20 }
+
+s1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "S1 field of L1 PRE signalling (S1) (0=T2 SISO, 1 - T2 MISO, 2 - Non-T2, 3 - T2 LITE SISO, 4 - T2 LITE MISO)"
+::= { t2miStatus 21 }
+
+subslices-per-frame OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Sub slices per frame (SUB_SLICES_PER_FRAME L1 field)"
+::= { t2miStatus 22 }
+
+sys-a-max-throughput OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Maximum available throughput for System A Kb/s"
+::= { t2miStatus 23 }
+
+t2-lite-compatible OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "T2 Base-Lite compatible (T2_BASE_LITE L1 field), (1 - T2 Lite compatible, 0 - T2 Lite incompatible)"
+::= { t2miStatus 24 }
+
+t2-system-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "System Identifier (T2_SYSTEM_ID L1 field)"
+::= { t2miStatus 25 }
+
+t2-version OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "T2 Version (T2_VERSION L1 field) 0 - '1.1.1', 1 - '1.2.1', 2 - '1.3.1'"
+::= { t2miStatus 26 }
+
+t2f-num OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of T2 Frame per Superframe (NUM_T2_FRAMES L1 field)"
+::= { t2miStatus 27 }
+
+t2PlpStatusTable OBJECT-TYPE
+        SYNTAX  SEQUENCE OF T2PlpStatusTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS  current
+        DESCRIPTION
+            "Parameters table of available PLP"
+        ::= { t2PlpStatus 1 }
+
+t2PlpStatusTableEntry OBJECT-TYPE
+        SYNTAX  T2PlpStatusTableEntry
+        MAX-ACCESS  not-accessible
+        STATUS  current
+        DESCRIPTION
+            ""
+        INDEX { plp-id }
+        ::= { t2PlpStatusTable 1 }
+
+T2PlpStatusTableEntry ::=
+    SEQUENCE {
+        plp-id     Unsigned32,
+        issy-type     Integer32,
+        issy-en     Integer32,
+        null-packet-del-en     Integer32,
+        nm-hem     Integer32,
+        plp-bitrate     Integer32,
+        plp-type     Integer32,
+        first-frame-idx     Integer32,
+        plp-group-id     Integer32,
+        plp-cod     Integer32,
+        plp-mod     Integer32,
+        plp-rot     Integer32,
+        plp-fec-type     Integer32,
+        plp-num-blocks     Integer32,
+        frame-interval     Integer32,
+        plp-ti-len     Integer32,
+        plp-ti-type     Integer32,
+        inband-a-flag     Integer32,
+        inband-b-flag     Integer32,
+        static-flag     Integer32,
+        static-padding-flag     Integer32
+    }
+
+plp-id OBJECT-TYPE
+        SYNTAX  Unsigned32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Identifier (PLP_ID field of L1)"
+        ::= { t2PlpStatusTableEntry 1 }
+
+issy-type OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "ISSY type  (0, 1 - None, 2 - Short 15 bit, 3 - Long 22 bit)"
+        ::= { t2PlpStatusTableEntry 2 }
+
+issy-en OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "ISSY enable  (1 - enabled, 0 - disabled)"
+        ::= { t2PlpStatusTableEntry 3 }
+
+null-packet-del-en OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "Null Packet deletion enable  (1 - enable, 0 - disable)"
+        ::= { t2PlpStatusTableEntry 4 }
+
+nm-hem OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Mode Adaptation  (0 - Normal, 1 - High Efficiency)"
+        ::= { t2PlpStatusTableEntry 5 }
+
+plp-bitrate OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "BB frame data bit rate  (Kb/s)"
+        ::= { t2PlpStatusTableEntry 6 }
+
+plp-type OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Type (PLP_TYPE field of L1) (0 - Common, 1 - Type1, 2 - Type2)"
+        ::= { t2PlpStatusTableEntry 7 }
+
+first-frame-idx OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "Indicates the FRAME_IDX of the first frame of the super-frame in which the current PLP occurs (FIRST_FRAME_IDX field of L1)"
+        ::= { t2PlpStatusTableEntry 8 }
+
+plp-group-id OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Group Identifier (PLP_GROUP_ID field of L1)"
+        ::= { t2PlpStatusTableEntry 9 }
+
+plp-cod OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Code Rate (PLP_COD field of L1) (0 - 1/2, 1 - 3/5, 2 - 2/3, 3 - 3/4, 4 - 4/5, 5 - 5/6)"
+        ::= { t2PlpStatusTableEntry 10 }
+
+plp-mod OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Constellation (PLP_MOD field of L1) (0 - QPSK, 1 - 16QAM, 2 - 64QAM, 3 - 256QAM)"
+        ::= { t2PlpStatusTableEntry 11 }
+
+plp-rot OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Constellation Rotation (PLP_ROTATION field of L1) (1 - rotated, 0 - normal)"
+        ::= { t2PlpStatusTableEntry 12 }
+
+plp-fec-type OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP FEC type (PLP_FEC_TYPE field of L1) (0 - 16K LDPC, 1 - 64K LDPC)"
+        ::= { t2PlpStatusTableEntry 13 }
+
+plp-num-blocks OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Number of FEC Block per frame (PLP_NUM_BLOCKS_MAX field of L1)"
+        ::= { t2PlpStatusTableEntry 14 }
+
+frame-interval OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "Indicates the T2-frame interval within the super-frame for the associated PLP (FRAME_INTERVAL field of L1)"
+        ::= { t2PlpStatusTableEntry 15 }
+
+plp-ti-len OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Time Interleaver Length (TIME_IL_LENGTH field of L1)"
+        ::= { t2PlpStatusTableEntry 16 }
+
+plp-ti-type OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "PLP Time Interleaver Type (TIME_IL_TYPE field of L1) (0 - Type 0', 1 - Type1)"
+        ::= { t2PlpStatusTableEntry 17 }
+
+inband-a-flag OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "In-Band A signaling (IN-BAND_A_FLAG field of L1) (1 - active, 0 - inactive)"
+        ::= { t2PlpStatusTableEntry 18 }
+
+inband-b-flag OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "In-Band B signaling (IN-BAND_B_FLAG field of L1) (1 - active, 0 - inactive)"
+        ::= { t2PlpStatusTableEntry 19 }
+
+static-flag OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "Dynamic or static PLP allocation (STATIC_FLAG field of L1) (0 - dynamic, 1 - static)"
+        ::= { t2PlpStatusTableEntry 20 }
+
+static-padding-flag OBJECT-TYPE
+        SYNTAX  Integer32
+        MAX-ACCESS  read-only
+        STATUS  current
+        DESCRIPTION
+            "Whether used filling of BB-frame by empty values (STATIC_PADDING_FLAG field of L1) (0 - no, 1 - yes)"
+        ::= { t2PlpStatusTableEntry 21 }
+
+ia-cell-id-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing cell identifier value"
+::= { iaSignallingStatus 1 }
+
+ia-cell-id-valid-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing cell identifier valid signal (0 - not valid, 1 - valid)"
+::= { iaSignallingStatus 3 }
+
+ia-delay-offset-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing delay offset value in 100 ns units"
+::= { iaSignallingStatus 5 }
+
+ia-delay-offset-valid-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing delay offset valid signal (0 - not valid, 1 - valid)"
+::= { iaSignallingStatus 7 }
+
+ia-l1-ace-papr-max-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing L1 ACE PAPR max value"
+::= { iaSignallingStatus 9 }
+
+ia-l1-ace-papr-max-valid-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing L1 ACE PAPR max valid signal (0 - not valid, 1 - valid)"
+::= { iaSignallingStatus 11 }
+
+ia-miso-group-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing MISO group value (0 - Group 1, 1 - Group 2)"
+::= { iaSignallingStatus 13 }
+
+ia-miso-group-valid-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing MISO group value valid signal (0 - not valid, 1 - valid)"
+::= { iaSignallingStatus 15 }
+
+ia-tx-freq-offset-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing Frequency Offset value, Hz"
+::= { iaSignallingStatus 17 }
+
+ia-tx-freq-offset-valid-0-mon OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Individual Addressing Frequency Offset valid signal (0 - not valid, 1 - valid)"
+::= { iaSignallingStatus 19 }
+
+gps-on-board OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GLONASS/GPS receiver presence on the board (0 - no presence, 1 - presence)"
+::= { gpsStatus 1 }
+
+is-gps-ok OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GLONASS/GPS receiver connection state (0 - no connection, 1 - normal)"
+::= { gpsStatus 2 }
+
+ant-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GLONASS/GPS antenna state (0 - normal, 1 - short circuit, 2 - idle)"
+::= { gpsStatus 3 }
+
+is-gps-lock OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Capture of satellites (0 - not captured, 1 - captured)"
+::= { gpsStatus 4 }
+
+gps-sats-in-view OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number GPS satellites in view"
+::= { gpsStatus 5 }
+
+gln-sats-in-view OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number GLONASS satellites in view"
+::= { gpsStatus 6 }
+
+gps-sats-in-use OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number GPS satellites in use"
+::= { gpsStatus 7 }
+
+gln-sats-in-use OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number GLONASS satellites in use"
+::= { gpsStatus 8 }
+
+hours OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Hours"
+::= { gpsStatus 9 }
+
+minutes OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Minutes"
+::= { gpsStatus 10 }
+
+seconds OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Seconds"
+::= { gpsStatus 11 }
+
+day OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Day"
+::= { gpsStatus 12 }
+
+month OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Month"
+::= { gpsStatus 13 }
+
+year OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Year"
+::= { gpsStatus 14 }
+
+time-of-day OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number seconds from beginning day"
+::= { gpsStatus 15 }
+
+longitude OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Longitude"
+::= { gpsStatus 16 }
+
+latitude OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Latitude"
+::= { gpsStatus 17 }
+
+sync-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Synchronization mode (0 - 2D, 1 - 3D)"
+::= { gpsStatus 18 }
+
+gps-version OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "GLONASS/GPS resiever version"
+::= { gpsStatus 19 }
+
+amp-model OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier model number"
+::= { ampStatus 1 }
+
+amp-number OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier number in transmitter (1-16)"
+::= { ampStatus 2 }
+
+amp-serial-number OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier serial number"
+::= { ampStatus 3 }
+
+amp-output-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Output power of amplifier 10-1 W"
+::= { ampStatus 4 }
+
+input-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Input power of amplifier 10-1 dB"
+::= { ampStatus 5 }
+
+reflected-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Power reflected by amplifier 10-2 W"
+::= { ampStatus 6 }
+
+temperature1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier temperature (sensor 1) C"
+::= { ampStatus 7 }
+
+temperature2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier temperature (sensor 2) C"
+::= { ampStatus 8 }
+
+current1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 1 (*10-1 A)"
+::= { ampStatus 9 }
+
+current2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 2 (*10-1 A)"
+::= { ampStatus 10 }
+
+current3 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 3 (*10-1 A)"
+::= { ampStatus 11 }
+
+current4 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 4 (*10-1 A)"
+::= { ampStatus 12 }
+
+current5 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 5 (*10-1 A)"
+::= { ampStatus 13 }
+
+current6 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 6 (*10-1 A)"
+::= { ampStatus 14 }
+
+current7 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 7 (*10-1 A)"
+::= { ampStatus 15 }
+
+current8 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 8 (*10-1 A)"
+::= { ampStatus 16 }
+
+current9 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 9 (*10-1 A)"
+::= { ampStatus 17 }
+
+current10 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 10 (*10-1 A)"
+::= { ampStatus 18 }
+
+current11 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 11 (*10-1 A)"
+::= { ampStatus 19 }
+
+current12 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 12 (*10-1 A)"
+::= { ampStatus 20 }
+
+current13 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 13 (*10-1 A)"
+::= { ampStatus 21 }
+
+current14 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 14 (*10-1 A)"
+::= { ampStatus 22 }
+
+current15 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 15 (*10-1 A)"
+::= { ampStatus 23 }
+
+current16 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 16 (*10-1 A)"
+::= { ampStatus 24 }
+
+current17 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 17 (*10-1 A)"
+::= { ampStatus 25 }
+
+current18 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 18 (*10-1 A)"
+::= { ampStatus 26 }
+
+current19 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier current 19 (*10-1 A)"
+::= { ampStatus 27 }
+
+status-word OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier status (offsets, alarms)"
+::= { ampStatus 28 }
+
+gain OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier gain * 10-1 %"
+::= { ampStatus 29 }
+
+threshold-pin OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier input power protection threshold (*10-1 %)"
+::= { ampStatus 30 }
+
+threshold-pref OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier reflected power protection threshold (*10-1 %)"
+::= { ampStatus 31 }
+
+temp-comp OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier temperature compensation (0 - off, 1 - on)"
+::= { ampStatus 32 }
+
+errors OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Errors (every bit is error):
+Bit 0  - Internal error (check log file)
+Bit 1  - Hardware/software incompatibility
+Bit 2  - Modulator overheat
+Bit 3  - Input TS unlock
+Bit 4  - Input TS buffer overflow
+Bit 5  - Input TS error
+Bit 6  - Primary T2-MI stream unlock
+Bit 7  - Primary T2-MI stream error
+Bit 8  - Secondary T2-MI stream unlock
+Bit 9  - Secondary T2-MI stream error
+Bit 10 - Time sync error
+Bit 11 - Unsupported T2-Frame
+Bit 12 - T2-MI continuity counter error
+Bit 13 - GLONASS/GPS: antenna short
+Bit 14 - GLONASS/GPS: antenna not connected
+Bit 15 - 10 MHz oscillator fail
+Bit 16 - Reference oscillator fail
+Bit 17 - In SFN mode GLONASS/GPS or EXT inputs must be selected as a reference source
+Bit 18 - Ext 1PPS reference lost
+Bit 19 - GLONASS/GPS 1PPS reference lost
+Bit 20 - 1PPS reference lost"
+::= { alarms 1 }
+
+amp-errors OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Amplifier error (every bit is error:
+Bit 0 - Pout
+Bit 1 - Pref
+Bit 2 - Pin
+Bit 3 - Overheat
+Bit 4 - I1 current
+Bit 5 - I2 current
+Bit 6 - I3 current
+Bit 7 - Pout mean
+Bit 8 - Internal error
+Bit 9 - No connection"
+::= { alarms 2 }
+
+warnings OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Warnings (low part) (every bit is warning)
+Bit 0  - RF lock on user request
+Bit 1  - RF lock by external signal
+Bit 2  - RF lock - modulator init in progress
+Bit 3  - Software upgrade in progress
+Bit 4  - In SFN mode GLONASS/GPS or EXT inputs must be selected as a reference source
+Bit 5  - Reference oscillator PLL unlock
+Bit 6  - 10 MHz PLL unlock
+Bit 7  - 10 MHz PLL reference lost
+Bit 8  - 1PPS reference fail, holdover
+Bit 9  - GLONASS/GPS unlocked, holdover
+Bit 10 - Ext 1PPS reference fail, holdover
+Bit 11 - GLONASS/GPS 1PPS reference fail, holdover
+Bit 12 - Input TS unlock
+Bit 13 - Input TS buffer overflow
+Bit 14 - Input TS error
+Bit 15 - Max bitrate is exceeded
+Bit 16 - 10 MHz reference lost, holdover
+Bit 17 - DAC datapath saturation
+Bit 18 - DAC data bus parity error
+Bit 19 - RF maintain activated
+Bit 20 - In TSoIP packet less 7 MPEG TS packets
+Bit 21 - Linear DPD: ADC read timeout
+Bit 22 - Linear DPD: ADC read error
+Bit 23 - Linear DPD: Feedback signal level is too high
+Bit 24 - Linear DPD: Feedback signal level is too low
+Bit 25 - Linear DPD: No correlation between modulator and amplifier output signals
+Bit 26 - Linear DPD: DPD curves estimation error
+Bit 27 - Linear DPD: Interrupted
+Bit 28 - Linear DPD: Signal distorted
+Bit 29 - Nonlinear DPD: ADC read timeout
+Bit 30 - Nonlinear DPD: ADC read error
+Bit 31 - Nonlinear DPD: Feedback signal level is too high"
+::= { alarms 3 }
+
+warnings-h OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Warnings (high part) (every bit is warning)
+Bit 0  - Nonlinear DPD: Feedback signal level is too low
+Bit 1  - Nonlinear DPD: No correlation between modulator and amplifier output signals
+Bit 2  - Nonlinear DPD: DPD curves estimation error
+Bit 3  - Nonlinear DPD: Interrupted
+Bit 4  - Nonlinear DPD: Signal distorted
+"
+::= { alarms 4 }
+
+messages OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "User messages (every bit is user message)
+Bit 0 - Modulator OK
+Bit 1 - PRBS transmission
+Bit 2 - Sinus transmission
+Bit 3 - Null packets transmission"
+::= { alarms 5 }
+
+mute-reason OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "RF output mute reasons
+0 - No reason,
+1 - Init in progress,
+2 - User request,
+3 - External event,
+4 - Input stream error,
+5 - Time sync error,
+6 - Clocking reference error,
+7 - Hardware error,
+8 - Firmware update"
+::= { alarms 6 }
+
+sel-ref-src OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Selected clocking reference source (0 - INTERNAL, 1 - EXTERNAL, 2 - GPS, 3 - AUTO)"
+::= { clocking 2 }
+
+ext-1pps-dir OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "External 1PPS signal direction (1 - input, 0 - output)"
+::= { clocking 3 }
+
+ext-10mhz-dir OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "External 10 Mhz signal direction (1 - input, 0 - output)"
+::= { clocking 4 }
+
+mute OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "RF output mute (1 - mute, 0 -unmute)"
+::= { output 1 }
+
+attenuation OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Attenuation, dB*10, 0... 200 (0... 20 dB)"
+::= { output 2 }
+
+frequency OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Output RF frequency, Hz (50 000 000... 900 000 000 Hz)step 10 kHz"
+::= { output 3 }
+
+channel OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Channel number (1...12, 21...69)"
+::= { output 4 }
+
+ts-output-mux OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "ASI output multiplexer (0 - ASI 0, 1 - ASI 1, 2 - TSOIP, 3 - off, 4 - active TS stream)"
+::= { output 5 }
+
+ext-rf-lock-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Permission external mute of FR output (0 - prohibit, 1 - permit)"
+::= { output 6 }
+
+rf-maintain OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "RF mainatin (0 - off, 1 - on)"
+::= { output 7 }
+
+input-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "DVB-T2 input mode (0 - System A, 1 - System B)"
+::= { inputs 1 }
+
+prim-mute OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "T2MI stream mute (0 - off, 1 - on)"
+::= { inputs 2 }
+
+prim-pid OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PID of T2MI stream (0... 8 191)"
+::= { inputs 3 }
+
+ts-input-mux-0 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Primary input multiplexer (0 - ASI 1, 1 - ASI 2, 2 - TSoIP, 3 - off)"
+::= { inputs 6 }
+
+ts-input-mux-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Secondary input multiplexer (0 - ASI 1, 1 - ASI 2, 2 - TSoIP, 3 - off)"
+::= { inputs 7 }
+
+ts-switching-policy OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "TS inputs switching policy (0 - Any available, 1 - Prefer primary, 2 - Primary only, 3 - Secondary only)"
+::= { inputs 10 }
+
+ts-valid-packet-threshold OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Valid TS Packets Number for Switching (1... 1 000 000)"
+::= { inputs 11 }
+
+delay-offset-subseconds OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Local SFN delay offset, in 100 ns units, (-1 500 000 0... 1 500 000 0)."
+::= { t2mi 2 }
+
+ts-mode-bw OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Bandwidth (System A only) (0 - 1.7 MHz, 1 - 5 MHz, 2 - 6 MHz, 3 - 7 MHz, 4 - 8 MHz, 5 - 10 MHz)"
+::= { t2mi 5 }
+
+ts-mode-network-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Network ID (System A only) (0...65535)"
+::= { t2mi 6 }
+
+ts-mode-t2-system-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "T2 System ID (System A only) (0...65535)"
+::= { t2mi 7 }
+
+ts-mode-cell-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Cell ID (System A only) (0...65535)"
+::= { t2mi 8 }
+
+force-mfn OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Forces MFN mode (1 - on, 0 - off)"
+::= { t2mi 10 }
+
+force-relative-sfn OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Forces Relavite SFN Mode (1 - on, 0 - off)"
+::= { t2mi 11 }
+
+ts-mode-l1-mod OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "L1 Constellation (System A only) (0 - BPSK, 1 - QPSK, 2 - 16QAM, 3 - 64QAM)"
+::= { t2mi 12 }
+
+ts-mode-fft-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "FFT Size (System A only) (0 - 1K, 1 - 2K, 2 - 4k, 3 - 8K 4 - 16K, 5 - 32K)"
+::= { t2mi 13 }
+
+ts-mode-fft-mode-ext OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "FFT Extended mode (System A only) (1 - on, 0 - off)"
+::= { t2mi 14 }
+
+ts-mode-gi-fraction OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Guard interval (System A only) (0 - 1/32, 1 - 1/16, 2 - 1/8, 3 - 1/4, 4 - 1/128, 5 - 19/128, 6 - 19/256)"
+::= { t2mi 15 }
+
+ts-mode-pp OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Pilot Pattern (System A only) (0 - PP1, 1 - PP2, 2 - PP3, 3 - PP4, 4 - PP5, 5 - PP6, 6 - PP7, 7 - PP8)"
+::= { t2mi 16 }
+
+ts-mode-t2f-num OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Number of T2 Frame per Superframe (System A only) (2...255)"
+::= { t2mi 17 }
+
+ts-mode-ds-num OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Number of Data Symbol per Frame (System A only) (0...4095)"
+::= { t2mi 18 }
+
+ia-tx-identifier OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Individual Addressing identifier for both profile 0 and 1 (0...65535)"
+::= { t2mi 19 }
+
+ts-mode-l1-post-scrambled OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L1-post scrambled (System A only) (1 - on, 0 - off)"
+::= { t2mi 31 }
+
+ts-mode-subslices-per-frame OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number subslices per T2 frame (System A only) (0... 32767)"
+::= { t2mi 32 }
+
+ts-mode-t2-version OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "DVB-T2 version (System A only) (0 - '1.1.1', 1 - '1.2.1', 2 - '1.3.1')"
+::= { t2mi 33 }
+
+ts-mode-inband-a OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "In-band A signaling (System A only) (1 - on, 0 - off)"
+::= { t2mi 34 }
+
+ts-mode-inband-b OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "In-band B signaling (System A only) (1 - on, 0 - off)"
+::= { t2mi 35 }
+
+ts-adapter-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "TS Adaptation enable (System A only) (1 - enable, 0 - disable)"
+::= { plp 1 }
+
+ts-mode-plp-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Identifier (System A only) (0...255)"
+::= { plp 2 }
+
+ts-mode-plp-group-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Group Identifier (System A only) (0...255)"
+::= { plp 3 }
+
+ts-mode-plp-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Type (System A only) (0 - Common, 1 - Type 1, 2 - Type 2)"
+::= { plp 4 }
+
+ts-mode-nm-hem OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Mode Adaptation (System A only) (0 - Normal, 1 - High Efficiency)"
+::= { plp 5 }
+
+ts-mode-null-packet-del-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Null Packet deletion enable (System A only) (1 - enable, 0 - disable)"
+::= { plp 6 }
+
+ts-mode-issy-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "ISSY enable (System A only) (1 - enable, 0 - disable)"
+::= { plp 7 }
+
+ts-mode-issy-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "ISSY type (System A only) (0 - Short, 1 - Long)"
+::= { plp 8 }
+
+ts-mode-plp-fec-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP FEC type (System A only) (0 - 16K, 1 - 64K)"
+::= { plp 9 }
+
+ts-mode-plp-cod OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Code rate (System A only) (0 - 1/2, 1 - 3/5, 2 - 2/3, 3 - 3/4, 4 - 4/5, 5 - 5/6)"
+::= { plp 10 }
+
+ts-mode-plp-mod OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Constellation (System A only) (0 - QPSK, 1 - 16QAM, 2 - 64QAM, 3 - 256QAM)"
+::= { plp 11 }
+
+ts-mode-plp-rot OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Constellation Rotation (System A only) (1 - on, 0 - off)"
+::= { plp 12 }
+
+ts-mode-plp-ti-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Time Interleaver Type (System A only) (0 - Type 0, 1 - Type 1)"
+::= { plp 13 }
+
+ts-mode-plp-ti-len OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Time Interleaver Length (System A only) (0...255)"
+::= { plp 14 }
+
+ts-mode-plp-num-blocks OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "PLP Number of FEC Block per frame (System A only) (0...1023)"
+::= { plp 15 }
+
+cell-id-0-local OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Cell identifier local replacement (0... 65 535)"
+::= { t2Replacement 1 }
+
+cell-id-0-sel OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Cell identifier replacement selection:
+0 - No cell id replacement,
+1 - Cell id replacement with local value,
+2 - Individual addressing cell id if present else no replacement,
+3 - Individual addressing cell id if present else replacement with local value)"
+::= { t2Replacement 9 }
+
+miso-group-0-local OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "MISO group local replacement (0 - Group 1, 1 - Group 2)"
+::= { t2Replacement 17 }
+
+miso-group-0-sel OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "MISO group local replacement selection:
+0 - No MISO group replacement,
+1 - MISO group replacement with local value
+2 - Individual addressing MISO group if present else no replacement,
+3 - Individual addressing MISO group if present else replacement with local value"
+::= { t2Replacement 19 }
+
+rf-frequency-replace-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "RF center frequency replacement enable into L1 signalling (1 - on, 0 - off)"
+::= { t2Replacement 21 }
+
+inband-replacement-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "In-band A and / or B extraction from T2MI
+ 0 - Extract none,
+1 - Extract in-band B,
+2 - Extract in-band A,
+3 - Extract in-band A & B"
+::= { t2Replacement 22 }
+
+delay-offset-sel OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Delay offset source selection
+0 - No delay offset,
+1 - Local values of delay offset,
+2 - Individual addressing delay offset if present else no delay offset,
+3 - Individual addressing delay offset if present else local values of delay offset"
+::= { t2Replacement 24 }
+
+ant-voltage OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "GLONASS/GPS antenna voltage (3 - 3,3V, 5 - 5V)"
+::= { gps 1 }
+
+pps-mark-type OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "1PPS Alignment (0 - GPS, 1 - GLONASS, 2 - UTC, 3 - UTC SU)"
+::= { gps 2 }
+
+nav-system OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Navigation system (0 - GPS+GLONASS, 1 - GPS, 2 - GLONASS, 3 - GPS+GLONASS+SB, 4 - GPS+SBAS, 5 - GLONASS+SBAS)"
+::= { gps 3 }
+
+kp-up OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Increase amplifier gain (any allowable value for set)"
+::= { amp 1 }
+
+kp-down OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Decrease amplifier gain (any allowable value for set)"
+::= { amp 2 }
+
+tk-on OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Enable temperature compensation (any allowable value for set)"
+::= { amp 3 }
+
+tk-off OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Disable temperature compensation (any allowable value for set)"
+::= { amp 4 }
+
+with-amp OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Amplifier control enable (0 - control disabled, 1 - control enabled)"
+::= { amp 9 }
+
+ipaddr-0 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "IP address of LAN/TSoIP2 (interface eth0)"
+::= { network 1 }
+
+netmask-0 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Network mask of LAN/TSoIP2 (interface eth0)"
+::= { network 2 }
+
+gateway-0 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Gateway for LAN/TSoIP2 (interface eth0)"
+::= { network 3 }
+
+dhcp-0 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "DHCP client for LAN/TSoIP2 (1 - on, 0 - off)"
+::= { network 4 }
+
+vlan-0 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "VLAN ID for LAN/TSoIP2 (0... 4 095)"
+::= { network 5 }
+
+ipaddr-1 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "IP address of TSoIP1 (interface eth1)"
+::= { network 6 }
+
+netmask-1 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Network mask of TSoIP1 (interface eth1)"
+::= { network 7 }
+
+gateway-1 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Gateway for TSoIP1 (interface eth1)"
+::= { network 8 }
+
+dhcp-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "DHCP client for TSoIP1 (1 - on, 0 - off)"
+::= { network 9 }
+
+vlan-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "VLAN ID for TSoIP1 (0... 4 095)"
+::= { network 10 }
+
+link-switch OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "eth0 to ksz8895 link status"
+::= { network 11 }
+
+link-tsoip1 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "TSoIP1 link status"
+::= { network 12 }
+
+link-eth0 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "ksz8895 to eth0 link status"
+::= { network 13 }
+
+link-lan1 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "LAN1 link status"
+::= { network 14 }
+
+link-tsoip2 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "TSoIP2 link status"
+::= { network 15 }
+
+link-lan2 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "LAN2 link status"
+::= { network 16 }
+
+mc-group-1 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "TSoIP 1 multicast group, '0.0.0.0' - permit unicast"
+::= { tsoip 1 }
+
+tsoip-port-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "TSoIP 1 port (must be even for RTP stream and must be in intervals 1024... 9996, 10005... 30298, 30304... 65530)"
+::= { tsoip 2 }
+
+mc-group-2 OBJECT-TYPE
+    SYNTAX      IpAddress
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "TSoIP 2 multicast group, '0.0.0.0' - permit unicast"
+::= { tsoip 3 }
+
+tsoip-port-2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "TSoIP 2 port (must be even for RTP stream and must be in intervals 1024... 9996, 10005... 30298, 30304... 65530)"
+::= { tsoip 4 }
+
+primary-ip OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Primary index for clever switching (0 - TSoIp 1, 1 - TsoIP 2)"
+::= { tsoip 5 }
+
+ip-clever-switch OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "IP Clever switching (1 - on, 0 - off)"
+::= { tsoip 6 }
+
+ip-auto-switch-back OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "IP Clever switching back (1 - on, 0 - off)"
+::= { tsoip 7 }
+
+valid-packed-threshold OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Valid packets threshold for stream stability detecting (0... 2 147 483 647 (2^31-1))"
+::= { tsoip 8 }
+
+error-packed-threshold OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Error packets threshold for stream instability detecting (0... 2 147 483 647 (2^31-1))"
+::= { tsoip 9 }
+
+active-index OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Active input interface (0 - TSoIP 1, 1 - TSoIP 2)"
+::= { tsoip 11 }
+
+ts-packets-num-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number MPEG-TS packets per UDP for TSoIP 1"
+::= { tsoip 13 }
+
+ts-stable-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Stream stability flag for TSoIP 1"
+::= { tsoip 14 }
+
+is-rtp-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "RTP presence flag for TSoIP 1"
+::= { tsoip 15 }
+
+is-188-size-1 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "MPEG-TS packet length for TSoIP 1 (1 - 188 bytes, 0 - 204 bytes)"
+::= { tsoip 16 }
+
+ts-packets-num-2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number MPEG-TS packets per UDP for TSoIP 2"
+::= { tsoip 17 }
+
+ts-stable-2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Stream stability flag for TSoIP 2"
+::= { tsoip 18 }
+
+is-rtp-2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "RTP presence flag for TSoIP 2"
+::= { tsoip 19 }
+
+is-188-size-2 OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "MPEG-TS packet length for TSoIP 2 (1 - 188 bytes, 0 - 204 bytes)"
+::= { tsoip 20 }
+
+rtp-mpts-received OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Total number of received RTP packets (OctetStr because value may reach 2^64)"
+::= { tsoip 21 }
+
+rtp-mpts-recovered OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of recovered RTP packets (OctetStr because value may reach 2^64)"
+::= { tsoip 22 }
+
+rtp-mpts-duplicated OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of duplicate RTP packets (OctetStr because value may reach 2^64)"
+::= { tsoip 24 }
+
+rtp-mpts-missing OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of lost RTP packets (OctetStr because value may reach 2^64)"
+::= { tsoip 25 }
+
+fec-l OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "L dimension of FEC table"
+::= { tsoip 30 }
+
+fec-d OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "D dimension of FEC table"
+::= { tsoip 31 }
+
+rtp-per OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Packets Error Ratio, PER, %"
+::= { tsoip 32 }
+
+lin-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Activity Linear Pre-corrector (LP) (1 - active, 0 - inactive)"
+::= { pre-correctors 1 }
+
+nonlin-en OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Activity Non-Linear Pre-corrector (NP) (1 - active, 0 - inactive)"
+::= { pre-correctors 2 }
+
+crest-factor OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Crest Factor, dB*10 (80... 120) (8.0... 12.0 dB)"
+::= { pre-correctors 3 }
+
+test-signal-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Test signal control on modulator input:
+0 - Tests turned off, TS stream on modulator input
+1 - Null packets (System A only), modulator input turned off
+2 - Sinus, DUC connected to sinus generator, modulator turned off
+"
+::= { test-modes 2 }
+
+errors-trap NOTIFICATION-TYPE
+    OBJECTS { errors }
+    STATUS current
+    DESCRIPTION "TRAP is sent at changing of 'errors' variable in alarm branch"
+::= { traps 1 }
+
+amp-errors-trap NOTIFICATION-TYPE
+    OBJECTS { amp-errors }
+    STATUS current
+    DESCRIPTION "TRAP is sent at changing of 'amp_errors' variable in alarm branch"
+::= { traps 2 }
+
+warnings-trap NOTIFICATION-TYPE
+    OBJECTS { warnings }
+    STATUS current
+    DESCRIPTION "TRAP is sent at changing of 'warnings' variable in alarm branch"
+::= { traps 3 }
+
+warnings-h-trap NOTIFICATION-TYPE
+    OBJECTS { warnings-h }
+    STATUS current
+    DESCRIPTION "TRAP is sent at changing of 'warnings-h' variable in alarm branch"
+::= { traps 4 }
+
+messages-trap NOTIFICATION-TYPE
+    OBJECTS { messages }
+    STATUS current
+    DESCRIPTION "TRAP is sent at changing of 'messages' variable in alarm branch"
+::= { traps 5 }
+
+lin-prec-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Linear adaptive precorrector mode 0 - disable, 1 - monitoring, 2 - continious, 3 - autostart"
+::= { lin-prec-ctrl 1 }
+
+lin-prec-manual-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Enable the linear precorrector in the manual mode, 1 - enable, 0 - disable"
+::= { lin-prec-ctrl 2 }
+
+lin-prec-autostart-th OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Nonuniformity of the amplifier frequency response at the adaptive process starts, 0.1 dB (0 ... 30)"
+::= { lin-prec-ctrl 3 }
+
+lin-pre-tilt OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "The frequency response tilt correction. Difference between the                           response at maximum and minimum frequencies of the signal band, 0.1 dB (-10 ... +10)"
+::= { lin-prec-ctrl 4 }
+
+lin-prec-is-averaging-on OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Enable the averaging of the linear adaptive precorrector curves, 1 - enable, 0 - disable"
+::= { lin-prec-ctrl 5 }
+
+lin-prec-averaging-length OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "The number of the linear precorrector curves used for averaging, 1 ... 50"
+::= { lin-prec-ctrl 6 }
+
+lin-reset OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Reset linear adaptive precorrector"
+::= { lin-prec-ctrl 12 }
+
+lin-save OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Save current adaptive precorrector curve into nonvolantile memory.                             This curve will be used as default after an adaptive precorrector restart"
+::= { lin-prec-ctrl 13 }
+
+lin-prec-attenuation OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Linear precorrector feedback input attenuation, 0.5 dB (0 ... 63)"
+::= { lin-prec-status 1 }
+
+lin-prec-level-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "The linear precorrector feedback signal level status, 0 - normal, 1 - low, 2 - high"
+::= { lin-prec-status 2 }
+
+lin-prec-input-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Peak level of the linear precorrector feedback signal, 0.1 dBFs"
+::= { lin-prec-status 3 }
+
+lin-prec-error-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Linear precorrector error ID: 
+                            NO_Error = 0 
+                             DAC_ReadTimeout = 1 
+                             DAC_ReadError = 2 
+                            NONLIN_FB_POWER_TOO_HIGH = 3
+                            LIN_FB_POWER_TOO_HIGH = 4
+                            NONLIN_FB_POWER_TOO_LOW = 5
+                            LIN_FB_POWER_TOO_LOW = 6
+                            WRONG_CORRELATION = 7
+                            PRECORRECTOR_ESTIMATION_ERROR = 8
+                            EXTERNAL_INTERRUPTION = 9
+                            SIGNAL_CORRUPTION = 10"
+::= { lin-prec-status 4 }
+
+lin-prec-error-message OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Error active message describing error status of the linear precorrector"
+::= { lin-prec-status 5 }
+
+lin-prec-resp-delta OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Unevenness of the amplifier frequency response wuth precorrection"
+::= { lin-prec-status 6 }
+
+lin-iteration OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of the last iteration"
+::= { lin-prec-status 7 }
+
+lin-adapt-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Status of the last iteration: 0 - not active, 1 - monitoring, 2 - adaptation, 3 - error"
+::= { lin-prec-status 8 }
+
+lin-iteration-time OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Time since beginning current iteration, s"
+::= { lin-prec-status 9 }
+
+lin-prev-iter-duration OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Previous iteration duration, s"
+::= { lin-prec-status 10 }
+
+lin-avg-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Mean power on feedback input, dBFs"
+::= { lin-prec-status 11 }
+
+lin-avg-power-dbm OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Mean power on feedback input, 0.1 dBm"
+::= { lin-prec-status 12 }
+
+lin-not-saved OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Corrector characterictics unsaved: 0 - saved, 1 - unsaved"
+::= { lin-prec-status 13 }
+
+nl-prec-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Nonlinear adaptive precorrector mode 0 - disable, 1 - monitoring, 2 - continious, 3 - autostart"
+::= { nl-prec-ctrl 1 }
+
+nl-prec-manual-mode OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Enable the nonlinear precorrector in the manual mode, 1 - enable, 0 - disable"
+::= { nl-prec-ctrl 2 }
+
+nl-prec-autostart-th OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Level of shoudlers at the adaptive process starts, 0.1 dB  (-500 ... -25)"
+::= { nl-prec-ctrl 3 }
+
+nl-prec-is-averaging-on OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Enable the averaging of the nonlinear adaptive precorrector curves, 1 - enable, 0 - disable"
+::= { nl-prec-ctrl 4 }
+
+nl-prec-averaging-length OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "The number of the linear precorrector curves used for averaging, 1 ... 50"
+::= { nl-prec-ctrl 5 }
+
+nl-prec-out-limit-db OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Clipping threshold at the output of the nonlinear precorrector                          (in dB relative to average power), 0.1 дБ (60 ... 150)"
+::= { nl-prec-ctrl 6 }
+
+nl-gain-offset-db OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Gain offset for compensation of precorrection influence on the output power, 0.1 dB, (-10 ... +10)"
+::= { nl-prec-ctrl 7 }
+
+nl-reset OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Reset nonlinear adaptive precorrector"
+::= { nl-prec-ctrl 13 }
+
+nl-save OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-write
+    STATUS current
+    DESCRIPTION "Save current adaptive precorrector curve into nonvolantile memory.                             This curve will be used as default after an adaptive precorrector restart"
+::= { nl-prec-ctrl 14 }
+
+nl-prec-attenuation OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Linear precorrector feedback input attenuation, 0.5 dB (0 ... 63)"
+::= { nl-prec-status 1 }
+
+nl-prec-level-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "The Nonlinear precorrector feedback signal level status, 0 - normal, 1 - low, 2 - high"
+::= { nl-prec-status 2 }
+
+nl-prec-input-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Peak level of the linear precorrector feedback signal, 0.1 dBFs"
+::= { nl-prec-status 3 }
+
+nl-prec-error-id OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Nonlinear precorrector error ID: 
+                            NO_Error = 0 
+                             DAC_ReadTimeout = 1 
+                             DAC_ReadError = 2 
+                            NONLIN_FB_POWER_TOO_HIGH = 3
+                            LIN_FB_POWER_TOO_HIGH = 4
+                            NONLIN_FB_POWER_TOO_LOW = 5
+                            LIN_FB_POWER_TOO_LOW = 6
+                            WRONG_CORRELATION = 7
+                            PRECORRECTOR_ESTIMATION_ERROR = 8
+                            EXTERNAL_INTERRUPTION = 9
+                            SIGNAL_CORRUPTION = 10"
+::= { nl-prec-status 4 }
+
+nl-prec-error-message OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Error active message describing error status of the nonlinear precorrector"
+::= { nl-prec-status 5 }
+
+nl-shoudlers OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Shoudlers level at the amplifier output, 0.1 dB"
+::= { nl-prec-status 6 }
+
+nl-iteration OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Number of the last iteration"
+::= { nl-prec-status 7 }
+
+nl-adapt-status OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Status of the last iteration: 0 - not active, 1 - monitoring, 2 - adaptation, 3 - error"
+::= { nl-prec-status 8 }
+
+nl-iteration-time OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Time since beginning current iteration, s"
+::= { nl-prec-status 9 }
+
+nl-prev-iter-duration OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Previous iteration duration, s"
+::= { nl-prec-status 10 }
+
+nl-avg-power OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Mean power on feedback input, dBFs"
+::= { nl-prec-status 11 }
+
+nl-avg-power-dbm OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Mean power on feedback input, 0.1 dBm"
+::= { nl-prec-status 12 }
+
+nl-not-saved OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-only
+    STATUS current
+    DESCRIPTION "Corrector characterictics unsaved: 0 - saved, 1 - unsaved"
+::= { nl-prec-status 13 }
+
+
+END

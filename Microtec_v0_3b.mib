@@ -1,0 +1,1935 @@
+
+-- Microtec.mib
+
+Microtec DEFINITIONS ::= BEGIN
+
+IMPORTS
+	OBJECT-TYPE, MODULE-IDENTITY, enterprises, 
+	Integer32
+		FROM SNMPv2-SMI;
+
+enMicrotec MODULE-IDENTITY
+	LAST-UPDATED "201902101754Z"
+	ORGANIZATION 
+		"OOO NPK Microtec"
+	CONTACT-INFO 
+		"tel.: +7 (383) 210-62-94, 363-22-03
+		
+		Email: microtec@microtec.ru
+		
+		www.microtec.ru"
+	DESCRIPTION 
+		"Microtec devices parameters"
+::= { enterprises 31735 }
+
+
+-- The device common information parameters
+
+mpInfo               OBJECT IDENTIFIER ::= { enMicrotec 1 }
+
+-- The device common status parameters
+
+mpStatus             OBJECT IDENTIFIER ::= { enMicrotec 2 }
+
+-- The common parameters for most devices
+
+mpCommon             OBJECT IDENTIFIER ::= { enMicrotec 3 }
+
+-- The parameters for the devices:
+-- - Amplifiers (AN, ALN, ALND);
+-- - Control units (CB4) (voltage only);
+-- - Divider adder units (DAxxxx) (voltage only).
+
+mpAmplifier          OBJECT IDENTIFIER ::= { enMicrotec 4 }
+
+-- The parameters for the devices:
+-- - Radio FM Exciters and Transmitters (TF, TFR).
+-- 
+-- But the parameter mpRadioFM-VoltageBattery is common for most devices.
+
+mpRadioFM            OBJECT IDENTIFIER ::= { enMicrotec 5 }
+
+-- The parameters for the devices:
+-- - Control units (CB3, CB4);
+-- - Divider-adder units (DAxxxx).
+-- 
+
+
+mpControl            OBJECT IDENTIFIER ::= { enMicrotec 7 }
+
+-- The parameters for the devices:
+-- - Control units (CB4);
+-- - Automatic switching units (ACU);
+-- - Divider-adder units (DAxxxx).
+
+mpSwitch             OBJECT IDENTIFIER ::= { enMicrotec 8 }
+
+-- The parameters for the devices:
+-- - Analog TV Exciters and Transmitters (TTV, TTU).
+
+mpAnalogTV           OBJECT IDENTIFIER ::= { enMicrotec 9 }
+
+-- The parameters for the devices:
+-- - Digital TV (DVB-T2) Exciters and Transmitters (TTUD).
+
+mpDigitalTV          OBJECT IDENTIFIER ::= { enMicrotec 10 }
+
+-- The presets parameters of the device types:
+-- - Radio FM (TF).
+
+mpPresets            OBJECT IDENTIFIER ::= { enMicrotec 11 }
+
+
+-- The presets parameters of the device types:
+-- - SDSW commutator.
+
+mpSDSW            OBJECT IDENTIFIER ::= { enMicrotec 12 }
+
+
+-- The presets parameters of the device types:
+-- - SDSW commutator.
+
+mpCB5            OBJECT IDENTIFIER ::= { enMicrotec 13 }
+
+-- The parameters for the devices:
+-- - Radio FM Exciters and Transmitters (TF, TFR) with MS4 control board
+
+
+mpRadioFM_MS4            OBJECT IDENTIFIER ::= { enMicrotec 100 }
+
+MS4_table OBJECT-GROUP
+    OBJECTS      { MS4-PowerOutput, MS4-PowerReflected, MS4-Temperature }
+    STATUS       current
+    DESCRIPTION  "subdirectory of MS-4"
+::= { mpRadioFM_MS4 1 }
+
+MS4_indexes OBJECT-GROUP
+    OBJECTS      { MS4-PowerOutput, MS4-PowerReflected, MS4-Temperature }
+    STATUS       current
+    DESCRIPTION  "indexes of param table of MS-4"
+::= { MS4_table 1 }
+
+MS4_params OBJECT-GROUP
+    OBJECTS      { MS4-PowerOutput, MS4-PowerReflected, MS4-Temperature }
+    STATUS       current
+    DESCRIPTION  "values of param table of MS-4"
+::= { MS4_table 2 }
+
+
+mpInfo-TypeID  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpInfo 1 }
+
+mpInfo-DeviceID  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpInfo 2 }
+
+mpInfo-Manufacturer  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device manufacturer name (Microtec)"
+	::= { mpInfo 3 }
+
+mpInfo-Name  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device factory name.
+		For ex: TF30, TTUD10 (388), etc."
+	::= { mpInfo 4 }
+
+mpInfo-Type  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device type.
+		For ex.: Exciter, Amplifier, Control unit, etc."
+	::= { mpInfo 5 }
+
+mpInfo-SerialNumber  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Serial number:
+		xxxxx
+		xxxxxx
+		
+		Serial number / Device number:
+		xxxxx/x
+		xxxxxx/x"
+	::= { mpInfo 6 }
+
+mpInfo-HardwareVersion  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Hardware version of device"
+	::= { mpInfo 7 }
+
+mpInfo-SoftwareVersion  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Software version of device"
+	::= { mpInfo 8 }
+
+mpInfo-SoftwareVersionAdd  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Software version of optional additional equipment.
+		For ex.: SW version integrated modulator Teamcast of exciter TTUD"
+	::= { mpInfo 9 }
+
+mpStatus-Mode  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"The device operation mode:
+		0 - Off (StandBy);
+		1 - On;
+		2 - Warming up (if available).
+		
+		To change set 0 or 1"
+	::= { mpStatus 1 }
+
+mpStatus-Status  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device general status:
+		0 - Ok (Normal);
+		1 - Failure;
+		2 - Emergency off."
+	::= { mpStatus 2 }
+
+mpCommon-PowerOutput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device output power in Watts"
+	::= { mpCommon 1 }
+
+mpCommon-PowerReflected  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device reflected power in Watts"
+	::= { mpCommon 2 }
+
+mpCommon-PowerInput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device input power in Watts"
+	::= { mpCommon 3 }
+
+mpCommon-Temperature  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device temperature in degree Celsium (把)"
+	::= { mpCommon 4 }
+
+mpCommon-TemperaturePSU  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device power supply unit temperature (in some devices) in degree Celsium (把)"
+	::= { mpCommon 5 }
+
+mpCommon-SWR  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The standing wave ratio"
+	::= { mpCommon 6 }
+
+mpAmplifier-Voltage1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N1 in Volts"
+	::= { mpAmplifier 1 }
+
+mpAmplifier-Voltage2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N2 in Volts"
+	::= { mpAmplifier 2 }
+
+mpAmplifier-Voltage3  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N3 in Volts"
+	::= { mpAmplifier 3 }
+
+mpAmplifier-Voltage4  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N4 in Volts"
+	::= { mpAmplifier 4 }
+
+mpAmplifier-Voltage5  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N5 in Volts"
+	::= { mpAmplifier 5 }
+
+mpAmplifier-Voltage6  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N6 in Volts"
+	::= { mpAmplifier 6 }
+
+mpAmplifier-Current1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N1 in Amperes"
+	::= { mpAmplifier 7 }
+
+mpAmplifier-Current2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N2 in Amperes"
+	::= { mpAmplifier 8 }
+
+mpAmplifier-Current3  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N3 in Amperes"
+	::= { mpAmplifier 9 }
+
+mpAmplifier-Current4  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N4 in Amperes"
+	::= { mpAmplifier 10 }
+
+mpAmplifier-Current5  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N5 in Amperes"
+	::= { mpAmplifier 11 }
+
+mpAmplifier-Current6  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N6 in Amperes"
+	::= { mpAmplifier 12 }
+
+mpAmplifier-Current7  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N7 in Amperes"
+	::= { mpAmplifier 13 }
+
+mpAmplifier-Current8  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N8 in Amperes"
+	::= { mpAmplifier 14 }
+
+mpAmplifier-Current9  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N9 in Amperes"
+	::= { mpAmplifier 15 }
+
+mpAmplifier-Current10  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption N10 in Amperes"
+	::= { mpAmplifier 16 }
+
+mpAmplifier-Voltage7  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N7 in Volts"
+	::= { mpAmplifier 17 }
+
+mpAmplifier-Voltage8  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage N8 in Volts"
+	::= { mpAmplifier 18 }
+
+mpRadioFM-CarrierFrequency  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The carrier frequency in MHz"
+	::= { mpRadioFM 1 }
+
+mpRadioFM-ModulationFrequency  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The modulation input frequency in kHz"
+	::= { mpRadioFM 2 }
+
+mpRadioFM-LeftOrMonoLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The left channel or mono input level in Volts"
+	::= { mpRadioFM 3 }
+
+mpRadioFM-RightOrCSSLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The right channel input level 
+		or composite stereo signal (combined in older devices) input level in Volts"
+	::= { mpRadioFM 4 }
+
+mpRadioFM-RDSFrequency  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The RDS input frequency in kHz"
+	::= { mpRadioFM 5 }
+
+mpRadioFM-VoltageAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier power supply voltage in Volts"
+	::= { mpRadioFM 6 }
+
+mpRadioFM-Current1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the first cascade of the power amplifier in Amperes"
+	::= { mpRadioFM 7 }
+
+mpRadioFM-VoltagePLL  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the phase-locked loop in Volts"
+	::= { mpRadioFM 8 }
+
+mpRadioFM-VoltagePSU  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the power supply unit in Volts"
+	::= { mpRadioFM 9 }
+
+mpRadioFM-Voltage12V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage 12 Volts in Volts"
+	::= { mpRadioFM 10 }
+
+mpRadioFM-Voltage5V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage 5 Volts in Volts"
+	::= { mpRadioFM 11 }
+
+mpRadioFM-VoltageLowPos  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage in Volts"
+	::= { mpRadioFM 12 }
+
+mpRadioFM-VoltageLowNeg  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The absolute value of the negative supply voltage in Volts."
+	::= { mpRadioFM 13 }
+
+mpRadioFM-VoltageBattery  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The lithium battery voltage on control board in Volts"
+	::= { mpRadioFM 14 }
+
+mpRadioFM-CSSLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The composite stereo signal input level in Volts"
+	::= { mpRadioFM 15 }
+
+mpRadioFM-Current2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the second cascade of the power amplifier in Amperes."
+	::= { mpRadioFM 16 }
+
+mpRadioFM-CurrentSum1And2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the sum of the current consumption of the first and second cascades of the power amplifier in Amperes."
+	::= { mpRadioFM 17 }
+
+mpRadioFM-PLL  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Phase-locked loop status:
+		0 - Failure;
+		1 - OK."
+	::= { mpRadioFM 18 }
+
+mpRadioFM-APC  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Automatic power control status:
+		0 - Failure;
+		1 - OK."
+	::= { mpRadioFM 19 }
+
+mpRadioFM-ScheduledPowerLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The scheduled power level in percents"
+	::= { mpRadioFM 20 }
+
+mpControl-UnbalancePower1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Unbalance Power-1 in Watts"
+	::= { mpControl 1 }
+
+mpControl-UnbalancePower2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Unbalance Power-2 in Watts"
+	::= { mpControl 2 }
+
+mpControl-UnbalancePower3  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Unbalance Power-3 in Watts"
+	::= { mpControl 3 }
+
+mpControl-K1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Dry contact-1:
+		0 - Failure;
+		1 - Ok (Normal).
+		
+		Ballast:
+		0 - Failure;
+		1 - Ok (Normal);
+		2 - Disable.
+		
+		"
+	::= { mpControl 4 }
+
+mpControl-K2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Dry contact-2:
+		0 - Failure;
+		1 - Ok (Normal).
+		
+		
+		Antenna-feeder device:
+		0 - Failure;
+		1 - Ok (Normal);
+		2 - Disable."
+	::= { mpControl 5 }
+
+mpControl-K3  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Dry contact-3:
+		0 - Failure;
+		1 - Ok (Normal).
+		
+		Equivalent:
+		0 - Failure;
+		1 - Ok (Normal);
+		2 - Disable."
+	::= { mpControl 6 }
+
+mpControl-K4  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Dry contact-4:
+		0 - Failure;
+		1 - Ok (Normal)."
+	::= { mpControl 7 }
+
+mpControl-K5  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Dry contact-5:
+		0 - Failure;
+		1 - Ok (Normal)."
+	::= { mpControl 8 }
+
+mpSwitch-SwitchingMode  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Switching mode:
+		0 - Manual;
+		1 - Auto."
+	::= { mpSwitch 1 }
+
+mpSwitch-ActiveExciter  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Active exciter:
+		0 - A;
+		1 - B."
+	::= { mpSwitch 2 }
+
+mpSwitch-WaitingTime  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Waiting time, sec"
+	::= { mpSwitch 3 }
+
+mpSwitch-SwitchingTime  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Switching time, sec"
+	::= { mpSwitch 4 }
+
+mpSwitch-ReserveType  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Reserve type:
+		0 - Cold;
+		1 - Hot."
+	::= { mpSwitch 5 }
+
+mpSwitch-OperatingMode  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Operating mode:
+		0 - A;
+		1 - B;
+		2 - AB;
+		3 - BA;
+		4 - A+B;
+		5 - B+A."
+	::= { mpSwitch 6 }
+
+mpSwitch-OutputPowerRatedA  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Output power rated of A"
+	::= { mpSwitch 7 }
+
+mpSwitch-OutputPowerMinA  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Output power minimum of A"
+	::= { mpSwitch 8 }
+
+mpSwitch-OutputPowerRatedB  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Output power rated of B"
+	::= { mpSwitch 9 }
+
+mpSwitch-OutputPowerMinB  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Output power minimum of B"
+	::= { mpSwitch 10 }
+
+mpSwitch-SwitchingOutputPower  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Switching output power"
+	::= { mpSwitch 11 }
+
+mpSwitch-Load  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Load type:
+		0 - Antenna-feeder device;
+		1 - Equivalent;
+		2 - Antenna-feeder device and equivalent."
+	::= { mpSwitch 12 }
+
+mpAnalogTV-01  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 1 }
+
+mpAnalogTV-02  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 2 }
+
+mpAnalogTV-03  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 3 }
+
+mpAnalogTV-04  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 4 }
+
+mpAnalogTV-05  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 5 }
+
+mpAnalogTV-06  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 6 }
+
+mpAnalogTV-07  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 7 }
+
+mpAnalogTV-08  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 8 }
+
+mpAnalogTV-09  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 9 }
+
+mpAnalogTV-10  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 10 }
+
+mpAnalogTV-11  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 11 }
+
+mpAnalogTV-12  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 12 }
+
+mpAnalogTV-13  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 13 }
+
+mpAnalogTV-14  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 14 }
+
+mpAnalogTV-15  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 15 }
+
+mpAnalogTV-16  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 16 }
+
+mpAnalogTV-17  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 17 }
+
+mpAnalogTV-18  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 18 }
+
+mpAnalogTV-19  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 19 }
+
+mpAnalogTV-20  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 20 }
+
+mpAnalogTV-21  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 21 }
+
+mpAnalogTV-22  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpAnalogTV 22 }
+
+mpAnalogTV-Channel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Channel
+		TTV: 1 - 12;
+		TTU:"
+	::= { mpAnalogTV 23 }
+
+mpAnalogTV-CarrierShift  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Carrier frequency shift"
+	::= { mpAnalogTV 24 }
+
+mpAnalogTV-VoltagePLLVideo  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Phase-locked loop voltage of video in Volts"
+	::= { mpAnalogTV 25 }
+
+mpAnalogTV-VoltagePLLAudio  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Phase-locked loop voltage of audio in Volts"
+	::= { mpAnalogTV 26 }
+
+mpAnalogTV-VoltagePLLConverter  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Phase-locked loop voltage of converter in Volts"
+	::= { mpAnalogTV 27 }
+
+mpAnalogTV-VoltageAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier power supply voltage in Volts"
+	::= { mpAnalogTV 28 }
+
+mpAnalogTV-Voltage12V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage 12 Volts in Volts."
+	::= { mpAnalogTV 29 }
+
+mpAnalogTV-Voltage8V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage 8 Volts in Volts."
+	::= { mpAnalogTV 30 }
+
+mpAnalogTV-Voltage5VPos  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage +5 Volts in Volts."
+	::= { mpAnalogTV 31 }
+
+mpAnalogTV-Voltage5VNeg  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The absolute value of the negative supply voltage -5 Volts in -Volts."
+	::= { mpAnalogTV 32 }
+
+mpAnalogTV-VideoInputLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The video input signal level in Volts"
+	::= { mpAnalogTV 33 }
+
+mpAnalogTV-SynchroLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The syncnro signal level in Volts"
+	::= { mpAnalogTV 34 }
+
+mpAnalogTV-AudioInputLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The audio input signal level in Volts"
+	::= { mpAnalogTV 35 }
+
+mpAnalogTV-CurrentAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the power amplifier in Amperes"
+	::= { mpAnalogTV 36 }
+
+mpAnalogTV-Attenuator1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The attenuation-1, dB"
+	::= { mpAnalogTV 37 }
+
+mpAnalogTV-Attenuator2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The attenuation-2, dB"
+	::= { mpAnalogTV 38 }
+
+mpDigitalTV-VoltageAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier power supply voltage in Volts"
+	::= { mpDigitalTV 1 }
+
+mpDigitalTV-VoltageReserve5V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the reserved supply voltage 5 Volts in Volts."
+	::= { mpDigitalTV 2 }
+
+mpDigitalTV-CurrentModulator  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the modulator in Amperes."
+	::= { mpDigitalTV 3 }
+
+mpDigitalTV-CurrentAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the power amplifier in Amperes."
+	::= { mpDigitalTV 4 }
+
+mpDigitalTV-AttenuatorModulator  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The attenuation of the modulator, dB"
+	::= { mpDigitalTV 5 }
+
+mpDigitalTV-AttenuatorAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The attenuation of the amplifier, dB (0-31dB)"
+	::= { mpDigitalTV 6 }
+
+mpDigitalTV-TemperatureModulator  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The modulator temperature in degree Celsium (把)"
+	::= { mpDigitalTV 7 }
+
+mpDigitalTV-Current1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the first cascade of the power amplifier in Amperes."
+	::= { mpDigitalTV 8 }
+
+mpDigitalTV-Current2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the second cascade of the power amplifier in Amperes."
+	::= { mpDigitalTV 9 }
+
+mpDigitalTV-VoltageRFPAL  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The RFPAL supply voltage value in Volts"
+	::= { mpDigitalTV 10 }
+
+mpDigitalTV-VoltageModulator  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The modulator supply voltage value in Volts"
+	::= { mpDigitalTV 11 }
+
+mpDigitalTV-CurrentRFPAL  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the RFPAL in Amperes."
+	::= { mpDigitalTV 12 }
+
+mpDigitalTV-Current3  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the third cascade of the power amplifier in Amperes."
+	::= { mpDigitalTV 13 }
+
+mpDigitalTV-AttenuatorAGC  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The attenuation of AGC, dB"
+	::= { mpDigitalTV 14 }
+
+mpDigitalTV-AmplifierOn  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier mode:
+		0 - Off;
+		1 - On."
+	::= { mpDigitalTV 15 }
+
+mpDigitalTV-ModulatorOff  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The modulator mode:
+		0 - On;
+		1 - Off."
+	::= { mpDigitalTV 16 }
+
+mpDigitalTV-ModulatorPowerOutputOn  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The output power mode of the modulator:
+		0 - Off;
+		1 - On."
+	::= { mpDigitalTV 17 }
+
+mpDigitalTV-AmplifierFanOn  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The fan mode of the amplifier:
+		0 - Off;
+		1 - On."
+	::= { mpDigitalTV 18 }
+
+mpDigitalTV-ModulatorFanOn  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The fan mode of the modulator:
+		0 - Off;
+		1 - On."
+	::= { mpDigitalTV 19 }
+
+mpDigitalTV-AmplifierFanResourseTimeRemaining  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The remaining time fan resourse of the amplifier, hours"
+	::= { mpDigitalTV 20 }
+
+mpDigitalTV-ModulatorFanResourseTimeRemaining  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The remaining time fan resourse of the modulator, hours"
+	::= { mpDigitalTV 21 }
+
+mpDigitalTV-StreamError  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Stream Error (Mute on TS stream Error):
+		0 - Ok (Norm);
+		1 - Error."
+	::= { mpDigitalTV 22 }
+
+mpDigitalTV-SynchroError  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Synchro Error (Mute on Reference Error):
+		0 - Ok (Norm);
+		1 - Error."
+	::= { mpDigitalTV 23 }
+
+mpDigitalTV-24  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     obsolete
+	DESCRIPTION 
+		""
+	::= { mpDigitalTV 24 }
+
+mpDigitalTV-SattelitesInUse  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Number of satellite in view"
+	::= { mpDigitalTV 25 }
+
+mpDigitalTV-TimeOffset  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Value of the time offset, us"
+	::= { mpDigitalTV 26 }
+
+mpDigitalTV-ExtendedTimeOffset  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Value of the extended time offset, us"
+	::= { mpDigitalTV 27 }
+
+mpDigitalTV-DelayBeforeModulationPrimaryStream  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Delay before modulation of primary stream (SFN time margin), us"
+	::= { mpDigitalTV 28 }
+
+mpDigitalTV-DelayBeforeModulationSecondaryStream  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Delay before modulation of secondary stream (SFN time margin), us"
+	::= { mpDigitalTV 29 }
+
+mpDigitalTV-ProcessingTime  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Processing Time, us"
+	::= { mpDigitalTV 30 }
+
+mpDigitalTV-DelayBeforeTrasmissionPrimaryStream  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Delay Before Trasmission (Primary Stream), us"
+	::= { mpDigitalTV 31 }
+
+mpDigitalTV-DelayBeforeTrasmissionSecondaryStream  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Delay Before Trasmission (Secondary Stream), us"
+	::= { mpDigitalTV 32 }
+
+mpDigitalTV-CellID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Cell ID"
+	::= { mpDigitalTV 33 }
+
+mpDigitalTV-GPSMode  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"GPS Mode:
+		0 - Auto;
+		1 - GPS;
+		2 - GLONASS."
+	::= { mpDigitalTV 34 }
+
+mpDigitalTV-GPSLocked  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"GPS Locked:
+		0 - No;
+		1 - Yes."
+	::= { mpDigitalTV 35 }
+
+mpDigitalTV-ClockSynchro  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Clock Synchro:
+		0 - No;
+		1 - Yes."
+	::= { mpDigitalTV 36 }
+
+mpDigitalTV-SFNReady  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"SFN Ready:
+		0 - No;
+		1 - Yes."
+	::= { mpDigitalTV 37 }
+
+mpDigitalTV-PrimarySource  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Primary Source:
+		0 - Off;
+		1 - ASI1;
+		2 - ASI2;
+		3 - Active IP."
+	::= { mpDigitalTV 38 }
+
+mpDigitalTV-SecondarySource  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Secondary Source:
+		0 - Off;
+		1 - ASI1;
+		2 - ASI2;
+		3 - Active IP."
+	::= { mpDigitalTV 39 }
+
+mpDigitalTV-ASIOutSource  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"ASI Out Source:
+		0 - Off;
+		1 - ASI1;
+		2 - ASI2;
+		3 - Active IP;
+		5 - Active Stream."
+	::= { mpDigitalTV 40 }
+
+mpDigitalTV-GeneralAndStreamStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"General and Stream Status:
+		
+		Byte 1 - General status:
+		Bit 0 - Selected input : 0=> Stream1, 1 => Stream2
+		Bit 1 - Requested PID not found
+		Bit 2 - RF Maintain is activated
+		Bit 3 - Rfu
+		Bit 4 - Rfu
+		Bit 5 - Rfu
+		Bit 6 - Rfu
+		Bit 7 - Rfu
+		
+		Byte 2 - Primary Stream status :
+		Bit 0 - MPEG-TS synchronization is missing
+		Bit 1 - Buffer Overflow
+		Bit 2 - Buffer UnderFlow
+		Bit 3 - L1 packet loss
+		Bit 4 - TimeStamp error
+		Bit 5 - T2-MI packet loss
+		Bit 6 - Rfu
+		Bit 7 - Rfu
+		
+		Byte 3 - Secondary Stream status*:
+		Bit 0 - MPEG-TS synchronization is missing
+		Bit 1 - Buffer Overflow
+		Bit 2 - Buffer UnderFlow
+		Bit 3 - L1 packet loss
+		Bit 4 - TimeStamp error
+		Bit 5 - T2-MI packet loss
+		Bit 6 - Rfu
+		Bit 7 - Rfu
+		
+		Bytes 4 to 6 Rfu
+		
+		* Active only in SFN mode for seamless switch management"
+	::= { mpDigitalTV 41 }
+
+mpDigitalTV-TSCleverSwitching  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"TS Clever Switch:
+		0 - Off;
+		1 - On."
+	::= { mpDigitalTV 42 }
+
+mpDigitalTV-AutoSwitchBack  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Auto Switch Back:
+		0 - Off;
+		1 - On.
+		"
+	::= { mpDigitalTV 43 }
+
+mpDigitalTV-MuteSource  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Mute source:
+		0 - No mute;
+		1 - License validation failed;
+		2 - Initialization in progress;
+		3 - Manual (on user request);
+		4 - Starting delay;
+		5 - TS stream error;
+		6 - Reference error;
+		7 - Hardware error or other;
+		8 - Firmware upgrade in progress;
+		9 - Warm up."
+	::= { mpDigitalTV 44 }
+
+mpDigitalTV-ASI1InputStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"ASI1 input status:
+		0 - Not detected;
+		1 - Detected."
+	::= { mpDigitalTV 45 }
+
+mpDigitalTV-ASI2InputStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"ASI2 input status:
+		0 - Not detected;
+		1 - Detected."
+	::= { mpDigitalTV 46 }
+
+mpDigitalTV-IPInputStatus  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"IP input status:
+		0 - Not detected;
+		1 - Detected."
+	::= { mpDigitalTV 47 }
+
+mpDigitalTV-MuteByUser  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"Mute by user:
+		0 - No mute;
+		1 - Mute."
+	::= { mpDigitalTV 48 }
+
+mpDigitalTV-VoltageAmplifier5V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier power supply voltage 5 Volts in Volts"
+	::= { mpDigitalTV 49 }
+
+mpDigitalTV-VoltageAmplifier12V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier power supply voltage 12 Volts in Volts"
+	::= { mpDigitalTV 50 }
+
+mpDigitalTV-Current4-1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the 4-1 cascade of the power amplifier in Amperes."
+	::= { mpDigitalTV 51 }
+
+mpDigitalTV-Current4-2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the 4-2 cascade of the power amplifier in Amperes."
+	::= { mpDigitalTV 52 }
+
+mpDigitalTV-Pout-precorrector  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Adaptive linear precorrector output power, dBm."
+	::= { mpDigitalTV 53 }
+	
+mpDigitalTV-Amplifier-PowerOutput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier output power in Watts, if present"
+	::= { mpDigitalTV 54 }
+	
+mpDigitalTV-Amplifier-ReflectedOutput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier reflected power in Watts, if present"
+	::= { mpDigitalTV 55 }
+	
+mpDigitalTV-Amplifier-PowerInput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier input power in Watts, if present"
+	::= { mpDigitalTV 56 }
+	
+mpDigitalTV-Amplifier-PowerInput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier input power in Watts, if present"
+	::= { mpDigitalTV 56 }
+	
+mpDigitalTV-Amplifier-Temperature  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier temperature, if present, Celsium"
+	::= { mpDigitalTV 57 }
+	
+mpDigitalTV-Amplifier-Mode  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier operation mode, if present. 0-off, 1-on, 2-warmup"
+	::= { mpDigitalTV 58 }
+	
+mpDigitalTV-Amplifier-Status  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Slave amplifier status, if present. 0-ok, 1-alarm, 2-alarm off"
+	::= { mpDigitalTV 59 }
+	
+
+mpPresets-PresetNumber  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-write
+	STATUS     current
+	DESCRIPTION 
+		"The number of the curren preset.
+		0 - No preset selected.
+		
+		To change a preset, set the number of another existing preset"
+	::= { mpPresets 1 }
+	
+mpSDSW-Status  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The number of the curren preset.
+		0 - No preset selected.
+		
+		To change a preset, set the number of another existing preset"
+	::= { mpSDSW 1 }	
+	
+	
+mpCB5-Status  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The number of the curren preset.
+		0 - No preset selected.
+		
+		To change a preset, set the number of another existing preset"
+	::= { mpCB5 1 }	
+	
+	
+
+MS4-PowerOutput  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device output power in Watts"
+	::= { MS4_params 0 }
+
+MS4-PowerReflected  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device reflected power in Watts"
+	::= { MS4_params 1 }
+
+MS4-SWR  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"SWR"
+	::= { MS4_params 1 }
+
+	
+MS4-Temperature  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The device temperature in degree Celsium (把)"
+	::= { MS4_params 3 }
+
+
+
+MS4-Modulation  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Modulation level"
+	::= { MS4_params 4 }
+
+
+MS4-Modulation_RDS  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Modulation level for RDS input"
+	::= { MS4_params 5 }
+
+
+MS4-KSS_level  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"KSS level"
+	::= { MS4_params 6 }
+
+
+MS4-Audio_left  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Audio left input level"
+	::= { MS4_params 7 }
+
+MS4-Audio_right  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Audio right input level"
+	::= { MS4_params 8 }
+
+MS4-Audio_M_S  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Audio M+S level"
+	::= { MS4_params 9 }
+
+
+MS4-PLL  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Phase-locked loop status:
+		0 - Failure;
+		1 - OK."
+	::= { MS4_params 10 }
+
+MS4-APC  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"APC loop status:
+		0 - Failure;
+		1 - OK."
+	::= { MS4_params 11 }
+
+MS4-VoltagePSU  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The amplifier power supply voltage in Volts"
+	::= { MS4_params 12 }
+
+
+
+MS4-Voltage12V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage 12 Volts in Volts"
+	::= { MS4_params 13 }
+
+MS4-Voltage5V  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage 5 Volts in Volts"
+	::= { MS4_params 14 }
+
+MS4-VoltageLowPos  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the supply voltage in Volts"
+	::= { MS4_params 15 }
+
+MS4-VoltageLowNeg  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The absolute value of the negative supply voltage in Volts."
+	::= { MS4_params 16 }
+
+MS4-VoltageBattery  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The lithium battery voltage on control board in Volts"
+	::= { MS4_params 17 }
+
+MS4-VoltagePLLConverter  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Phase-locked loop voltage of converter in Volts"
+	::= { MS4_params 18 }
+	
+MS4-VoltagePWM  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"PWM voltage of converter in Volts"
+	::= { MS4_params 19 }
+	
+MS4-LeftRightLevel  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The left and right channel, Volts"
+	::= { MS4_params 20 }
+	
+
+	
+MS4-VoltageAmplifier  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Voltage Amplifier, Volts"
+	::= { MS4_params 21 }
+
+
+
+MS4-Current1  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the first cascade of the power amplifier in Amperes"
+	::= { MS4_params 22 }
+	
+	
+MS4-Current2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The value of the current consumption of the second cascade of the power amplifier in Amperes"
+	::= { MS4_params 23 }
+	
+	
+MS4-Current1p2  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Total current consumption of the power amplifier in Amperes"
+	::= { MS4_params 24 }
+	
+	
+MS4-Cooler  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Cooler health status:
+		1 - Failure;
+		0 - OK."
+	::= { MS4_params 25 }
+	
+	
+END
+
+
+
+
