@@ -9,11 +9,11 @@ IMPORTS
 		FROM SNMPv2-SMI;
 
 enMicrotec MODULE-IDENTITY
-	LAST-UPDATED "201902101754Z"
+	LAST-UPDATED "202209080000Z"
 	ORGANIZATION 
 		"OOO NPK Microtec"
 	CONTACT-INFO 
-		"tel.: +7 (383) 210-62-94, 363-22-03
+		"tel.: +7 (383) 63-22-03
 		
 		Email: microtec@microtec.ru
 		
@@ -55,22 +55,26 @@ mpRadioFM            OBJECT IDENTIFIER ::= { enMicrotec 5 }
 -- 
 
 
-mpControl            OBJECT IDENTIFIER ::= { enMicrotec 7 }
+mpControl            OBJECT IDENTIFIER ::= { enMicrotec 6 }
 
 -- The parameters for the devices:
 -- - Control units (CB4);
 -- - Automatic switching units (ACU);
 -- - Divider-adder units (DAxxxx).
 
-mpSwitch             OBJECT IDENTIFIER ::= { enMicrotec 8 }
+
+mpSwitch            OBJECT IDENTIFIER ::= { enMicrotec 7 }
+
+-- The parameters for the devices:
+-- - Control units (CB4);
+-- - Automatic switching units (ACU);
+-- - Divider-adder units (DAxxxx).
+
+
+mpAnalogTV           OBJECT IDENTIFIER ::= { enMicrotec 8 }
 
 -- The parameters for the devices:
 -- - Analog TV Exciters and Transmitters (TTV, TTU).
-
-mpAnalogTV           OBJECT IDENTIFIER ::= { enMicrotec 9 }
-
--- The parameters for the devices:
--- - Digital TV (DVB-T2) Exciters and Transmitters (TTUD).
 
 mpDigitalTV          OBJECT IDENTIFIER ::= { enMicrotec 10 }
 
@@ -603,7 +607,7 @@ mpControl-UnbalancePower3  OBJECT-TYPE
 	::= { mpControl 3 }
 
 mpControl-K1  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     BYTE
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -620,7 +624,7 @@ mpControl-K1  OBJECT-TYPE
 	::= { mpControl 4 }
 
 mpControl-K2  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     BYTE
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -636,7 +640,7 @@ mpControl-K2  OBJECT-TYPE
 	::= { mpControl 5 }
 
 mpControl-K3  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     BYTE
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -650,28 +654,9 @@ mpControl-K3  OBJECT-TYPE
 		2 - Disable."
 	::= { mpControl 6 }
 
-mpControl-K4  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     current
-	DESCRIPTION 
-		"Dry contact-4:
-		0 - Failure;
-		1 - Ok (Normal)."
-	::= { mpControl 7 }
-
-mpControl-K5  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     current
-	DESCRIPTION 
-		"Dry contact-5:
-		0 - Failure;
-		1 - Ok (Normal)."
-	::= { mpControl 8 }
 
 mpSwitch-SwitchingMode  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -681,7 +666,7 @@ mpSwitch-SwitchingMode  OBJECT-TYPE
 	::= { mpSwitch 1 }
 
 mpSwitch-ActiveExciter  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -691,7 +676,7 @@ mpSwitch-ActiveExciter  OBJECT-TYPE
 	::= { mpSwitch 2 }
 
 mpSwitch-WaitingTime  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -699,7 +684,7 @@ mpSwitch-WaitingTime  OBJECT-TYPE
 	::= { mpSwitch 3 }
 
 mpSwitch-SwitchingTime  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -707,7 +692,7 @@ mpSwitch-SwitchingTime  OBJECT-TYPE
 	::= { mpSwitch 4 }
 
 mpSwitch-ReserveType  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -717,7 +702,7 @@ mpSwitch-ReserveType  OBJECT-TYPE
 	::= { mpSwitch 5 }
 
 mpSwitch-OperatingMode  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -731,7 +716,7 @@ mpSwitch-OperatingMode  OBJECT-TYPE
 	::= { mpSwitch 6 }
 
 mpSwitch-OutputPowerRatedA  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -739,7 +724,7 @@ mpSwitch-OutputPowerRatedA  OBJECT-TYPE
 	::= { mpSwitch 7 }
 
 mpSwitch-OutputPowerMinA  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -747,7 +732,7 @@ mpSwitch-OutputPowerMinA  OBJECT-TYPE
 	::= { mpSwitch 8 }
 
 mpSwitch-OutputPowerRatedB  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -755,7 +740,7 @@ mpSwitch-OutputPowerRatedB  OBJECT-TYPE
 	::= { mpSwitch 9 }
 
 mpSwitch-OutputPowerMinB  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -763,7 +748,7 @@ mpSwitch-OutputPowerMinB  OBJECT-TYPE
 	::= { mpSwitch 10 }
 
 mpSwitch-SwitchingOutputPower  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -771,7 +756,7 @@ mpSwitch-SwitchingOutputPower  OBJECT-TYPE
 	::= { mpSwitch 11 }
 
 mpSwitch-Load  OBJECT-TYPE
-	SYNTAX     OCTET STRING
+	SYNTAX     Integer32
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
@@ -781,191 +766,47 @@ mpSwitch-Load  OBJECT-TYPE
 		2 - Antenna-feeder device and equivalent."
 	::= { mpSwitch 12 }
 
-mpAnalogTV-01  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 1 }
-
-mpAnalogTV-02  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 2 }
-
-mpAnalogTV-03  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 3 }
-
-mpAnalogTV-04  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 4 }
-
-mpAnalogTV-05  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 5 }
-
-mpAnalogTV-06  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 6 }
-
-mpAnalogTV-07  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 7 }
-
-mpAnalogTV-08  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 8 }
-
-mpAnalogTV-09  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 9 }
-
-mpAnalogTV-10  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 10 }
-
-mpAnalogTV-11  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 11 }
-
-mpAnalogTV-12  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 12 }
-
-mpAnalogTV-13  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 13 }
-
-mpAnalogTV-14  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 14 }
-
-mpAnalogTV-15  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 15 }
-
-mpAnalogTV-16  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 16 }
-
-mpAnalogTV-17  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 17 }
-
-mpAnalogTV-18  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 18 }
-
-mpAnalogTV-19  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 19 }
-
-mpAnalogTV-20  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 20 }
-
-mpAnalogTV-21  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 21 }
-
-mpAnalogTV-22  OBJECT-TYPE
-	SYNTAX     OCTET STRING
-	MAX-ACCESS read-only
-	STATUS     obsolete
-	DESCRIPTION 
-		""
-	::= { mpAnalogTV 22 }
-
-mpAnalogTV-Channel  OBJECT-TYPE
+mpSwitch-U24  OBJECT-TYPE
 	SYNTAX     OCTET STRING
 	MAX-ACCESS read-only
 	STATUS     current
 	DESCRIPTION 
-		"Channel
-		TTV: 1 - 12;
-		TTU:"
-	::= { mpAnalogTV 23 }
+		"U24, Volts"
+	::= { mpSwitch 13 }
+	
+mpSwitch-U12  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"U12, Volts"
+	::= { mpSwitch 14 }
+	
+mpSwitch-U5P  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"U+5, Volts"
+	::= { mpSwitch 15 }
+	
+mpSwitch-U5N  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"U-5, Volts"
+	::= { mpSwitch 16 }
+	
+mpSwitch-U3  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"U3.3, Volts"
+	::= { mpSwitch 17 }
+	
+
 
 mpAnalogTV-CarrierShift  OBJECT-TYPE
 	SYNTAX     OCTET STRING
@@ -1659,6 +1500,33 @@ mpDigitalTV-Amplifier-Status  OBJECT-TYPE
 	DESCRIPTION 
 		"Slave amplifier status, if present. 0-ok, 1-alarm, 2-alarm off"
 	::= { mpDigitalTV 59 }
+	
+
+mpDigitalTV-NetworkID  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Network ID"
+	::= { mpDigitalTV 60 }
+
+mpDigitalTV-UsefulBitrate  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Average useful bit rate of the stream in bits per second."
+	::= { mpDigitalTV 61 }
+
+mpDigitalTV-SelectedReference  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Value = 0x00 Internal 10 MHz frequency reference
+		Value = 0x01 External 10 MHz frequency reference
+		Value = 0x02 Selected PPS reference"
+	::= { mpDigitalTV 62 }
 	
 
 mpPresets-PresetNumber  OBJECT-TYPE
