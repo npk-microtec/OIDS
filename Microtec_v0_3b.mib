@@ -417,6 +417,29 @@ mpAmplifier-Voltage8  OBJECT-TYPE
 		"The value of the supply voltage N8 in Volts"
 	::= { mpAmplifier 18 }
 
+	
+mpAmplifier-AmplifierFanOn  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The fan mode of the amplifier:
+		0 - Off;
+		1 - On."
+	::= { mpAmplifier 19 }
+	
+mpAmplifier-SourceFanOn  OBJECT-TYPE
+	SYNTAX     Integer32
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"The fan mode of the voltage source:
+		0 - Off;
+		1 - On."
+	::= { mpAmplifier 20 }
+	
+	
+	
 mpRadioFM-CarrierFrequency  OBJECT-TYPE
 	SYNTAX     OCTET STRING
 	MAX-ACCESS read-only
