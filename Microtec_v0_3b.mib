@@ -103,6 +103,10 @@ mpASR            OBJECT IDENTIFIER ::= { enMicrotec 14 }
 -- The parameters for the devices:
 -- - RF switcher units (ASR);
 
+mpTransmitter            OBJECT IDENTIFIER ::= { enMicrotec 15 }
+
+-- The parameters for the devices:
+-- - RF switcher units (ASR);
 
 
 mpRadioFM_MS4            OBJECT IDENTIFIER ::= { enMicrotec 100 }
@@ -1907,7 +1911,7 @@ MS4-SWR  OBJECT-TYPE
 	STATUS     current
 	DESCRIPTION 
 		"SWR"
-	::= { MS4_params 1 }
+	::= { MS4_params 2 }
 
 	
 MS4-Temperature  OBJECT-TYPE
@@ -2115,6 +2119,22 @@ MS4-Cooler  OBJECT-TYPE
 		0 - OK."
 	::= { MS4_params 25 }
 	
+	
+mpTransmitter-SerialNumber  OBJECT-TYPE
+	SYNTAX     OCTET STRING
+	MAX-ACCESS read-only
+	STATUS     current
+	DESCRIPTION 
+		"Serial number:
+		xxxxx
+		xxxxxx
+		
+		Serial number / Device number:
+		xxxxx/x
+		xxxxxx/x"
+	::= { mpTransmitter 1 }
+	
+
 	
 END
 
